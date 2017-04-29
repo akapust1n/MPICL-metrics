@@ -1,12 +1,13 @@
 #ifndef FILESHOW_H
 #define FILESHOW_H
+#include <QStringList>
 
 
 class FileShow
 {
 public:
     FileShow();
-    void showFiles();
+    QStringList listFiles();
 };
 
 #endif // FILESHOW_H

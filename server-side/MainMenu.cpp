@@ -1,5 +1,6 @@
 #include "MainMenu.h"
 #include <QTextStream>
+#include <algorithm>
 
 MainMenu::MainMenu()
     : cout(stdout)
@@ -36,12 +37,16 @@ void MainMenu::readMenuItem()
 void MainMenu::loadFile()
 {
     QString filename;
-    cout<<"Input filename: ";
+    cout << "Input filename: ";
     cout.flush();
-    cin>>filename;
+    cin >> filename;
     fileHandler.loadFile(filename);
 }
 
 void MainMenu::showExistingFiles()
 {
+    cout << "Existing files: \n";
+    cout.flush();
+    QStringList list = fileShow.listFiles();
+    std::for_each(list.begin(), list.end(), [=](QString _filename) {cout<<_filename<<"\n"; cout.flush(); });
 }

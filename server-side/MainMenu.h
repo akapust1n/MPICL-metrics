@@ -4,6 +4,7 @@
 #include <QString>
 #include <QTextStream>
 #include "FileHandler.h"
+#include "FileShow.h"
 
 class MainMenu
 {
@@ -23,6 +24,7 @@ private:
     QTextStream cin;
     int menuNumber;
     FileHandler fileHandler;
+    FileShow fileShow;
 
 
 };
