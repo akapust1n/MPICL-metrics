@@ -1,4 +1,4 @@
-QT += core
+QT += core sql widgets
 QT -= gui
 
 CONFIG += c++11
@@ -6,6 +6,8 @@ CONFIG += c++11
 TARGET = server-side
 CONFIG += console
 CONFIG -= app_bundle
+unix|win32: LIBS += -lzdb
+
 
 TEMPLATE = app
 

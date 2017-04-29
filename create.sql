@@ -1,0 +1,13 @@
+use mpicl;
+DROP TABLE IF EXISTS Tracks;
+
+CREATE TABLE Tracks ( 
+filename VARCHAR(50) NOT NULL,
+typeRecord FLOAT NOT NULL,
+typeEvent FLOAT NOT NULL,
+time FLOAT NOT NULL,
+prid INT,
+pid INT,
+numData INT,
+data VARCHAR(200)
+) ENGINE = INNODB DEFAULT CHARSET=utf8;
