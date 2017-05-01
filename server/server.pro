@@ -4,10 +4,10 @@ CONFIG -= app_bundle
 CONFIG += qt
 QT += sql
 CONFIG += c++14
-QMAKE_CXXFLAGS += -std=c++1y
+QMAKE_CXXFLAGS += -std=c++1y -DMYSQL_LIBRARY=mysqlclient
 
 
-LIBS += -L/usr/lib -lwt -lwthttp -lwtdbo -lwtdbosqlite3  -lzdb -I/usr/local/include -I/usr/include/zdb
+LIBS += -L/usr/lib -lwt -lwthttp -lwtdbo -lwtdbosqlite3 -lwtdbomysql -lzdb -I/usr/local/include -I/usr/include/zdb
 LIBS += -L/usr/local/lib -lwthttp -lwt -lboost_regex -lboost_signals
 LIBS += -lboost_system -lboost_thread -lboost_filesystem -lboost_date_time -lpthread -lcrypt
 
@@ -20,7 +20,8 @@ SOURCES += main.cpp \
     Router.cpp \
     FileManager.cpp \
     Track.cpp \
-    Session.cpp
+    Session.cpp \
+    User.cpp
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which as been marked deprecated (the exact warnings

@@ -1,20 +1,62 @@
-#include "Session.h"
-#include "User.h"
 
-#include "Wt/Auth/Dbo/AuthInfo"
-#include "Wt/Auth/Dbo/UserDatabase"
+#include "Session.h"
+
 #include "Wt/Auth/AuthService"
 #include "Wt/Auth/HashFunction"
 #include "Wt/Auth/PasswordService"
 #include "Wt/Auth/PasswordStrengthValidator"
 #include "Wt/Auth/PasswordVerifier"
 #include "Wt/Auth/GoogleService"
+#include "Wt/Auth/FacebookService"
+#include "Wt/Auth/Dbo/AuthInfo"
+#include "Wt/Auth/Dbo/UserDatabase"
 
-using namespace Wt;
+namespace {
+
+  class MyOAuth : public std::vector<const Wt::Auth::OAuthService *>
+  {
+  public:
+    ~MyOAuth()
+    {
+      for (unsigned i = 0; i < size(); ++i)
+    delete (*this)[i];
+    }
+  };
+
+  Wt::Auth::AuthService myAuthService;
+  Wt::Auth::PasswordService myPasswordService(myAuthService);
+  MyOAuth myOAuthServices;
+
+}
+
+void Session::configureAuth()
+{
+  myAuthService.setAuthTokensEnabled(true, "logincookie");
+  myAuthService.setEmailVerificationEnabled(true);
+  myAuthService.setEmailVerificationRequired(true);
+
+  Wt::Auth::PasswordVerifier *verifier = new Wt::Auth::PasswordVerifier();
+  verifier->addHashFunction(new Wt::Auth::BCryptHashFunction(7));
+  myPasswordService.setVerifier(verifier);
+  myPasswordService.setAttemptThrottlingEnabled(true);
+  myPasswordService.setStrengthValidator
+    (new Wt::Auth::PasswordStrengthValidator());
+
+  if (Wt::Auth::GoogleService::configured())
+    myOAuthServices.push_back(new Wt::Auth::GoogleService(myAuthService));
+
+  if (Wt::Auth::FacebookService::configured())
+    myOAuthServices.push_back(new Wt::Auth::FacebookService(myAuthService));
+
+  for (unsigned i = 0; i < myOAuthServices.size(); ++i)
+    myOAuthServices[i]->generateRedirectEndpoint();
+}
 
 Session::Session(const std::string& sqliteDb)
-  : connection_(sqliteDb)
+  : connection_(sqliteDb, "root","1111")
 {
+  connection_.setProperty("show-queries", "true");
+
   setConnection(connection_);
 
   mapClass<User>("user");
@@ -25,7 +67,7 @@ Session::Session(const std::string& sqliteDb)
   try {
     createTables();
     std::cerr << "Created database." << std::endl;
-  } catch (Wt::Dbo::Exception& e) {
+  } catch (std::exception& e) {
     std::cerr << e.what() << std::endl;
     std::cerr << "Using existing database";
   }
@@ -33,40 +75,36 @@ Session::Session(const std::string& sqliteDb)
   users_ = new UserDatabase(*this);
 }
 
-
-
-namespace {
-  Wt::Auth::AuthService myAuthService;
-  Wt::Auth::PasswordService myPasswordService(myAuthService);
-  std::vector<const Wt::Auth::OAuthService *> myOAuth;
+Session::~Session()
+{
+  delete users_;
 }
 
-void Session::configureAuth()
+Wt::Auth::AbstractUserDatabase& Session::users()
 {
-  myAuthService.setAuthTokensEnabled(true, "logincookie");
-  myAuthService.setEmailVerificationEnabled(true);
+  return *users_;
+}
 
-  Wt::Auth::PasswordVerifier *verifier = new Wt::Auth::PasswordVerifier();
-  verifier->addHashFunction(new Wt::Auth::BCryptHashFunction(7));
-  myPasswordService.setVerifier(verifier);
-  myPasswordService.setAttemptThrottlingEnabled(true);
-  myPasswordService.setStrengthValidator(new Wt::Auth::PasswordStrengthValidator());
-
-  if (Wt::Auth::GoogleService::configured())
-    myOAuthServices.push_back(new Wt::Auth::GoogleService(myAuthService));
+dbo::ptr<User> Session::user() const
+{
+  if (login_.loggedIn()) {
+    dbo::ptr<AuthInfo> authInfo = users_->find(login_.user());
+    return authInfo->user();
+  } else
+    return dbo::ptr<User>();
 }
 
 const Wt::Auth::AuthService& Session::auth()
 {
-  return myBaseAuth;
+  return myAuthService;
 }
 
 const Wt::Auth::PasswordService& Session::passwordAuth()
 {
-  return myPasswords;
+  return myPasswordService;
 }
 
 const std::vector<const Wt::Auth::OAuthService *>& Session::oAuth()
 {
-  return myOAuth;
+  return myOAuthServices;
 }
