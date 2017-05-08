@@ -6,7 +6,7 @@
 
 QT       += core gui
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets network
 
 TARGET = client-side
 TEMPLATE = app
@@ -24,8 +24,15 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 
 SOURCES += main.cpp\
-        MainWindow.cpp
+        MainWindow.cpp \
+    Info.cpp \
+    RequestManager.cpp
 
-HEADERS  += MainWindow.h
+HEADERS  += MainWindow.h \
+    Info.h \
+    RequestManager.h \
+    Item.h
 
-FORMS    += MainWindow.ui
+FORMS    += MainWindow.ui \
+    SelectFile.ui \
+    Graphics.ui

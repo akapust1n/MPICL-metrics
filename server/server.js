@@ -72,22 +72,22 @@ apiRoutes.get('/', function (req, res) {
 });
 
 
-apiRoutes.post('/authenticate', function (req, res) {
-
+apiRoutes.get('/authenticate', function (req, res) {
+    console.log("gg");
     // find the user
     User.findOne({
-        name: req.body.name
+        name: req.query.name
     }, function (err, user) {
 
         if (err) throw err;
 
         if (!user) {
-            console.log(req.body.name);
+            console.log(req.query.name);
             res.json({success: false, message: 'Authentication failed. User not found.'});
         } else if (user) {
 
             // check if password matches
-            if (user.password != req.body.password) {
+            if (user.password != req.query.password) {
                 res.json({success: false, message: 'Authentication failed. Wrong password.'});
             } else {
 
@@ -117,7 +117,7 @@ app.get("/getFile", function (req, res) {
     console.log("OFFSET");
     console.log(filename, offset);
     var query =connection.query('SELECT * from Tracks  WHERE filename=? LIMIT 2 OFFSET ? ', [filename, offset], function (err, rows, fields) {
-        connection.end();
+
         if (!err)
             console.log('The solution is: ', rows);
         else
@@ -125,11 +125,36 @@ app.get("/getFile", function (req, res) {
         res.json({result: rows});
 
     });
-    console.log(query.lastE);
-
 
 });
 
+app.get("/getFileList", function (req, res) {
+    let name = req.query.name;
+    console.log("OFFSET");
+    console.log(filename, offset);
+    var query =connection.query('SELECT * from Tracks  WHERE filename=? LIMIT 2 OFFSET ? ', [filename, offset], function (err, rows, fields) {
+
+        if (!err)
+            console.log('The solution is: ', rows);
+        else
+            console.log('Error while performing Query.');
+        res.json({result: rows});
+
+    });
+
+});
+app.get("/getNumProcessors", function (req, res) {
+    let filename = req.query.filename;
+    var query = connection.query('select max(prid) from Tracks WHERE filename=?', [filename], function (err, rows, fields) {
+        if (!err)
+            console.log('The solution is: ', rows);
+        else
+            console.log('Error while performing Query.');
+        res.json({result: rows});
+
+    });
+
+});
 //-----------------------------
 //AUTH
 //-----------------------------
