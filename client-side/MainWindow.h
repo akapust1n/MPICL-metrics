@@ -3,7 +3,7 @@
 
 #include <QMainWindow>
 #include <QNetworkAccessManager>
-#include <RequestHadler.h>
+#include <RequestManager.h>
 #include <Info.h>
 
 namespace Ui {
@@ -22,15 +22,23 @@ public:
 
 private slots:
     void on_pushButton_clicked();
-    void replyFinished(QNetworkReply*reply);
+    void loginFinished();
+    void loadFileFinished();
+
+    void on_loadButton_clicked();
+    
+    void on_loadFileListButton_clicked();
+
+    void on_chooseFileButton_clicked();
 
 private:
     Ui::MainWindow *ui;
     Ui::SelectFile *uiSF;
     Ui::Graphics *uiGR;
     QNetworkAccessManager *manager;
-    RequestHadler requestHandler;
+    RequestManager requestHandler;
     Info info;
+    QNetworkReply *reply;
 
 };
 

@@ -1,11 +1,12 @@
 #include "MainWindow.h"
+#include "ui_Graphics.h"
 #include "ui_MainWindow.h"
 #include "ui_SelectFile.h"
-#include "ui_Graphics.h"
 #include <QMessageBox>
 #include <QNetworkReply>
 #include <QNetworkRequest>
 #include <QPixmap>
+#include <QStringList>
 #include <QUrl>
 #include <QUrlQuery>
 #include <iostream>
@@ -23,8 +24,8 @@ MainWindow::MainWindow(QWidget* parent)
     ui->labeImg->resize(pixmap.width(), pixmap.height());
     ui->labeImg->setPixmap(pixmap);
     manager = new QNetworkAccessManager(this);
-    connect(manager, SIGNAL(finished(QNetworkReply*)),
-        this, SLOT(replyFinished(QNetworkReply*)));
+    // connect(manager, SIGNAL(finished(QNetworkReply*)),
+    //   this, SLOT(replyFinished(QNetworkReply*)));
 }
 
 MainWindow::~MainWindow()
@@ -42,14 +43,16 @@ void MainWindow::on_pushButton_clicked()
 
     QUrlQuery query;
 
-     query.addQueryItem("name", "Nick Cerminara");
+    query.addQueryItem("name", "Nick Cerminara");
     query.addQueryItem("password", "password");
-   // query.addQueryItem("name", username);
-   // query.addQueryItem("password", password);
+    // query.addQueryItem("name", username);
+    // query.addQueryItem("password", password);
 
     url.setQuery(query.query());
     request.setUrl(url);
-    manager->get(request);
+    reply = manager->get(request);
+    connect(reply, SIGNAL(finished()),
+        this, SLOT(loginFinished()));
 
     //    if (username == "test" && password == "test") {
     //        QMessageBox::information(this, "Login", "Username and password is correct");
@@ -60,22 +63,51 @@ void MainWindow::on_pushButton_clicked()
     //    }
 }
 
-void MainWindow::replyFinished(QNetworkReply* reply)
+void MainWindow::loginFinished()
 {
     info.token = requestHandler.getToken(reply->readAll());
     if (info.token.isEmpty()) {
         QMessageBox::information(this, "Login", "Username or password is wrong");
         //        //hide();
     } else {
-        uiGR->setupUi(this);
-        QMessageBox::information(this, "Login", "Username and password is corrent");
+        uiSF->setupUi(this);
+        // QMessageBox::information(this, "Login", "Username and password is corrent");
     }
+}
+
+void MainWindow::loadFileFinished()
+{
+    QStringList fileList = requestHandler.getFileList(reply->readAll());
+    uiSF->listFiles->addItems(fileList);
 }
 
 void MainWindow::on_loadButton_clicked()
 {
     QNetworkRequest request;
     QUrl url("http://localhost:8080/api/getNumProcessors");
+}
 
+void MainWindow::on_loadFileListButton_clicked()
+{
+    QUrlQuery query;
+    query.addQueryItem("name", "Nick Cerminara");
 
+    QNetworkRequest request;
+    QUrl url("http://localhost:8080/api/getFileList");
+
+    url.setQuery(query.query());
+    request.setUrl(url);
+    reply = manager->get(request);
+    connect(reply, SIGNAL(finished()),
+        this, SLOT(loadFileFinished()));
+}
+
+void MainWindow::on_chooseFileButton_clicked()
+{
+    if (!uiSF->listFiles->selectedItems().isEmpty()) {
+        QMessageBox::information(this, "Login", uiSF->listFiles->currentItem()->text());
+
+    } else {
+        QMessageBox::information(this, "Login", "unselected");
+    }
 }

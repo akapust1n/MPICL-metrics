@@ -52,12 +52,14 @@ console.log('Magic happens at http://localhost:' + port);
 app.get('/setup', function (req, res) {
 
     // create a sample user
-    var nick = new User({
+    let nick = new User({
         name: 'Nick Cerminara',
         password: 'password',
-        admin: true
+        files:[]
     });
-
+    nick.files.push("test1");
+    nick.files.push("test2");
+    nick.files.push("test3");
     // save the sample user
     nick.save(function (err) {
         if (err) throw err;
@@ -68,6 +70,7 @@ app.get('/setup', function (req, res) {
 });
 
 apiRoutes.get('/', function (req, res) {
+
     res.json({message: 'Welcome to the coolest API on earth!'});
 });
 
@@ -111,7 +114,7 @@ apiRoutes.get('/authenticate', function (req, res) {
 });
 
 
-app.get("/getFile", function (req, res) {
+apiRoutes.get("/getFile", function (req, res) {
     let filename = req.query.filename;
     let offset = parseInt(req.query.offset);
     console.log("OFFSET");
@@ -128,22 +131,25 @@ app.get("/getFile", function (req, res) {
 
 });
 
-app.get("/getFileList", function (req, res) {
-    let name = req.query.name;
-    console.log("OFFSET");
-    console.log(filename, offset);
-    var query =connection.query('SELECT * from Tracks  WHERE filename=? LIMIT 2 OFFSET ? ', [filename, offset], function (err, rows, fields) {
+apiRoutes.get("/getFileList", function (req, res) {
+    User.findOne({
+        name: req.query.name
+    }, function (err, user) {
 
-        if (!err)
-            console.log('The solution is: ', rows);
-        else
-            console.log('Error while performing Query.');
-        res.json({result: rows});
+        if (err) throw err;
+
+        if (!user) {
+            console.log(req.query.name);
+            res.json({success: false, message: 'User not found.'});
+        } else if (user) {
+            res.json({success: true, message: user.files});
+
+
+        }
 
     });
-
 });
-app.get("/getNumProcessors", function (req, res) {
+apiRoutes.get("/getNumProcessors", function (req, res) {
     let filename = req.query.filename;
     var query = connection.query('select max(prid) from Tracks WHERE filename=?', [filename], function (err, rows, fields) {
         if (!err)
@@ -159,36 +165,36 @@ app.get("/getNumProcessors", function (req, res) {
 //AUTH
 //-----------------------------
 
-apiRoutes.use(function (req, res, next) {
-
-    // check header or url parameters or post parameters for token
-    var token = req.body.token || req.query.token || req.headers['x-access-token'];
-
-    // decode token
-    if (token) {
-
-        // verifies secret and checks exp
-        jwt.verify(token, app.get('superSecret'), function (err, decoded) {
-            if (err) {
-                return res.json({success: false, message: 'Failed to authenticate token.'});
-            } else {
-                // if everything is good, save to request for use in other routes
-                req.decoded = decoded;
-                next();
-            }
-        });
-
-    } else {
-
-        // if there is no token
-        // return an error
-        return res.status(403).send({
-            success: false,
-            message: 'No token provided.'
-        });
-
-    }
-});
+// apiRoutes.use(function (req, res, next) {
+//
+//     // check header or url parameters or post parameters for token
+//     var token = req.body.token || req.query.token || req.headers['x-access-token'];
+//
+//     // decode token
+//     if (token) {
+//
+//         // verifies secret and checks exp
+//         jwt.verify(token, app.get('superSecret'), function (err, decoded) {
+//             if (err) {
+//                 return res.json({success: false, message: 'Failed to authenticate token.'});
+//             } else {
+//                 // if everything is good, save to request for use in other routes
+//                 req.decoded = decoded;
+//                 next();
+//             }
+//         });
+//
+//     } else {
+//
+//         // if there is no token
+//         // return an error
+//         return res.status(403).send({
+//             success: false,
+//             message: 'No token provided.'
+//         });
+//
+//     }
+// });
 
 apiRoutes.get('/users', function (req, res) {
     User.find({}, function (err, users) {
