@@ -5,6 +5,7 @@
 #include <QNetworkAccessManager>
 #include <RequestManager.h>
 #include <Info.h>
+#include <TableManager.h>
 
 namespace Ui {
 class MainWindow;
@@ -42,6 +43,7 @@ private:
     Ui::Graphics *uiGR;
     QNetworkAccessManager *manager;
     RequestManager requestHandler;
+    TableManager *tableManager;
     Info info;
     QNetworkReply *reply;
     int statusRequest=0;

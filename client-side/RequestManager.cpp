@@ -68,7 +68,7 @@ Item RequestManager::fromQJsonArray(QJsonArray array, int index)
     item.prid = object["prid"].toInt();
     item.time= object["time"].toDouble();
     item.typeEvent= object["typeEvent"].toInt();
-    item.typeRecord= object["typeEvent"].toInt();
+    item.typeRecord= object["typeRecord"].toInt();
 
     return  item;
 
