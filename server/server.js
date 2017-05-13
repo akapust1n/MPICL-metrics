@@ -117,14 +117,16 @@ apiRoutes.get('/authenticate', function (req, res) {
 apiRoutes.get("/getFile", function (req, res) {
     let filename = req.query.filename;
     let offset = parseInt(req.query.offset);
+    let limit =   parseInt(req.query.limit);
     console.log("OFFSET");
     console.log(filename, offset);
-    var query =connection.query('SELECT * from Tracks  WHERE filename=? LIMIT 2 OFFSET ? ', [filename, offset], function (err, rows, fields) {
+    var query =connection.query('SELECT * from Tracks  WHERE filename=? LIMIT ? OFFSET ? ', [filename,limit, offset], function (err, rows, fields) {
 
         if (!err)
             console.log('The solution is: ', rows);
         else
             console.log('Error while performing Query.');
+        console.log(rows);
         res.json({result: rows});
 
     });
@@ -156,6 +158,7 @@ apiRoutes.get("/getNumProcessors", function (req, res) {
             console.log('The solution is: ', rows);
         else
             console.log('Error while performing Query.');
+        console.log(query.sql);
         res.json({result: rows});
 
     });

@@ -24,13 +24,18 @@ private slots:
     void on_pushButton_clicked();
     void loginFinished();
     void loadFileFinished();
+    void loadNumProcessorsFinished();
+    void loadDataSlice();
 
-    void on_loadButton_clicked();
     
     void on_loadFileListButton_clicked();
 
     void on_chooseFileButton_clicked();
 
+    void on_loadDataButton_clicked();
+
+private:
+    void loadData();
 private:
     Ui::MainWindow *ui;
     Ui::SelectFile *uiSF;
@@ -39,6 +44,8 @@ private:
     RequestManager requestHandler;
     Info info;
     QNetworkReply *reply;
+    int statusRequest=0;
+    int offset = 0;
 
 };
 

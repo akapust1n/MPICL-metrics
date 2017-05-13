@@ -5,6 +5,7 @@
 #include <QString>
 #include <QVector>
 #include <QStringList>
+#include <QJsonArray>
 
 class RequestManager {
 public:
@@ -12,6 +13,9 @@ public:
     QString getToken(QByteArray array);
     QVector<Item> getItems(QByteArray array);
     QStringList getFileList(QByteArray array);
+    int getNumProcessors(QByteArray array);
+private:
+    Item fromQJsonArray(QJsonArray array, int index);
 
 };
 

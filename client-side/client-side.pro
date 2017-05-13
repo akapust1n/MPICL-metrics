@@ -26,12 +26,14 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += main.cpp\
         MainWindow.cpp \
     Info.cpp \
-    RequestManager.cpp
+    RequestManager.cpp \
+    TableManager.cpp
 
 HEADERS  += MainWindow.h \
     Info.h \
     RequestManager.h \
-    Item.h
+    Item.h \
+    TableManager.h
 
 FORMS    += MainWindow.ui \
     SelectFile.ui \

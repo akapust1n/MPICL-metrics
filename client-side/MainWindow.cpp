@@ -78,13 +78,24 @@ void MainWindow::loginFinished()
 void MainWindow::loadFileFinished()
 {
     QStringList fileList = requestHandler.getFileList(reply->readAll());
+    uiSF->listFiles->clear();
     uiSF->listFiles->addItems(fileList);
 }
 
-void MainWindow::on_loadButton_clicked()
+void MainWindow::loadNumProcessorsFinished()
 {
-    QNetworkRequest request;
-    QUrl url("http://localhost:8080/api/getNumProcessors");
+    info.numProcessors = requestHandler.getNumProcessors(reply->readAll());
+    uiGR->timeline->setRowCount(info.numProcessors);
+    std::cout<<"NUM PROC "<<info.numProcessors<<std::endl;
+    loadData();
+
+}
+
+void MainWindow::loadDataSlice()
+{
+    auto items = requestHandler.getItems(reply->readAll());
+    offset+=5;
+
 }
 
 void MainWindow::on_loadFileListButton_clicked()
@@ -105,9 +116,46 @@ void MainWindow::on_loadFileListButton_clicked()
 void MainWindow::on_chooseFileButton_clicked()
 {
     if (!uiSF->listFiles->selectedItems().isEmpty()) {
-        QMessageBox::information(this, "Login", uiSF->listFiles->currentItem()->text());
+       // QMessageBox::information(this, "Login", uiSF->listFiles->currentItem()->text());
+        info.filename = uiSF->listFiles->currentItem()->text();
+        uiGR->setupUi(this);
+
 
     } else {
         QMessageBox::information(this, "Login", "unselected");
     }
+}
+
+void MainWindow::on_loadDataButton_clicked()
+{
+    QUrlQuery query;
+    query.addQueryItem("filename", info.filename);
+
+    QNetworkRequest request;
+    QUrl url("http://localhost:8080/api/getNumProcessors");
+    url.setQuery(query.query());
+    request.setUrl(url);
+    reply = manager->get(request);
+    connect(reply, SIGNAL(finished()),
+        this, SLOT(loadNumProcessorsFinished()));
+
+}
+
+void MainWindow::loadData()
+{
+    QUrlQuery query;
+    query.addQueryItem("filename", info.filename);
+    query.addQueryItem("limit","5");
+    query.addQueryItem("offset",QString::number(offset));
+
+
+    QNetworkRequest request;
+    QUrl url("http://localhost:8080/api/getFile");
+    url.setQuery(query.query());
+    request.setUrl(url);
+    reply = manager->get(request);
+    connect(reply, SIGNAL(finished()),
+        this, SLOT(loadDataSlice()));
+
+
 }
