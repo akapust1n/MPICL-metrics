@@ -6,6 +6,7 @@
 #include <RequestManager.h>
 #include <Info.h>
 #include <TableManager.h>
+#include <utility>
 
 namespace Ui {
 class MainWindow;
@@ -27,6 +28,7 @@ private slots:
     void loadFileFinished();
     void loadNumProcessorsFinished();
     void loadDataSlice();
+    void loadTimeBordersFinished();
 
     
     void on_loadFileListButton_clicked();
@@ -45,6 +47,7 @@ private:
     RequestManager requestHandler;
     TableManager *tableManager;
     Info info;
+    std::pair<double,double> minMax;
     QNetworkReply *reply;
     int statusRequest=0;
     int offset = 0;

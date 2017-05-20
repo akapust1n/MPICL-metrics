@@ -15,10 +15,10 @@ int main()
 
     pool = ConnectionPool_new(url);
     ConnectionPool_start(pool);
-
+    while(true){
     MainMenu mainMenu;
     mainMenu.readMenuItem();
-    
+    }
 
     return 0;;
 }

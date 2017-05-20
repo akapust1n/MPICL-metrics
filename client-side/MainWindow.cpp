@@ -102,6 +102,11 @@ void MainWindow::loadDataSlice()
     }
 }
 
+void MainWindow::loadTimeBordersFinished()
+{
+
+}
+
 void MainWindow::on_loadFileListButton_clicked()
 {
     QUrlQuery query;
@@ -123,6 +128,16 @@ void MainWindow::on_chooseFileButton_clicked()
         // QMessageBox::information(this, "Login", uiSF->listFiles->currentItem()->text());
         info.filename = uiSF->listFiles->currentItem()->text();
         uiGR->setupUi(this);
+        QUrlQuery query;
+        query.addQueryItem("filename", info.filename);
+
+        QNetworkRequest request;
+        QUrl url("http://localhost:8080/api/getTimeBorders");
+        url.setQuery(query.query());
+        request.setUrl(url);
+        reply = manager->get(request);
+        connect(reply, SIGNAL(finished()),
+            this, SLOT(loadNumProcessorsFinished()));
         tableManager = new TableManager(uiGR->timeline);
 
     } else {

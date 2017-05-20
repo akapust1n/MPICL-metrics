@@ -55,7 +55,7 @@ app.get('/setup', function (req, res) {
     let nick = new User({
         name: 'Nick Cerminara',
         password: 'password',
-        files:[]
+        files: []
     });
     nick.files.push("test1");
     nick.files.push("test2");
@@ -117,10 +117,10 @@ apiRoutes.get('/authenticate', function (req, res) {
 apiRoutes.get("/getFile", function (req, res) {
     let filename = req.query.filename;
     let offset = parseInt(req.query.offset);
-    let limit =   parseInt(req.query.limit);
+    let limit = parseInt(req.query.limit);
     console.log("OFFSET");
     console.log(filename, offset);
-    var query =connection.query('SELECT * from Tracks  WHERE filename=? LIMIT ? OFFSET ? ', [filename,limit, offset], function (err, rows, fields) {
+    var query = connection.query('SELECT * from Tracks  WHERE filename=? LIMIT ? OFFSET ? ', [filename, limit, offset], function (err, rows, fields) {
 
         if (!err)
             console.log('The solution is: ', rows);
@@ -132,6 +132,22 @@ apiRoutes.get("/getFile", function (req, res) {
     });
 
 });
+
+apiRoutes.get("/getTimeBorders", function (req, res) {
+    let filename = req.query.filename;
+
+    let query = connection.query('SELECT MIN(time),MAX(time) from Tracks  WHERE filename=? ', [filename], function (err, minMax, fields) {
+
+        if (!err)
+            console.log('The solution is: ', minMax);
+        else
+            console.log('Error while performing Query.');
+        console.log(minMax);
+        res.json({result: minMax});
+
+    });
+});
+
 
 apiRoutes.get("/getFileList", function (req, res) {
     User.findOne({

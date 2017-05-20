@@ -60,6 +60,19 @@ int RequestManager::getNumProcessors(QByteArray array)
     return  result;
 }
 
+std::pair<double, double> RequestManager::getBordes(QByteArray array)
+{
+    std::cout<<"PROCS "<<array.toStdString()<<std::endl;
+    QJsonDocument document =  QJsonDocument::fromJson(array);
+    QJsonObject itemObject = document.object();
+    QJsonArray resultArray = itemObject["result"].toArray();
+    QJsonObject temp1 = resultArray.at(0).toObject();
+  //  int result = temp1["max(prid)"].toInt();
+
+    //return  result;
+
+}
+
 Item RequestManager::fromQJsonArray(QJsonArray array, int index)
 {
     Item item;
