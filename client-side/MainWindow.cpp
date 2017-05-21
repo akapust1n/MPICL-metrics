@@ -20,6 +20,7 @@ MainWindow::MainWindow(QWidget* parent)
 {
     ui->setupUi(this);
     networkManager = (new NetworkManager(info));
+    dataFilter = new DataFilter(info);
 
     ui->passwordForm->setEchoMode(QLineEdit::Password);
     QPixmap pixmap("/home/alexey/16/PICL-metrics/client-side/loginIcon.png");
@@ -33,6 +34,9 @@ MainWindow::~MainWindow()
 {
     delete tableManager;
     delete ui;
+    delete uiSF;
+    delete uiGR;
+    delete networkManager;
 }
 
 void MainWindow::on_pushButton_clicked()
@@ -61,14 +65,24 @@ void MainWindow::loadFileListFinished()
 void MainWindow::loadNumProcessorsFinished()
 {
 
-    tableManager->setRowCount(info->numProcessors);
     std::cout << "NUM PROC " << info->numProcessors << std::endl;
-    networkManager->loadData(info->filename,tableManager);
+    uiGR->numProc->setText(QString::number(info->numProcessors));
+    uiGR->maxProcEdit->setValidator(new QIntValidator(0, info->numProcessors, this));
+    connect(networkManager, SIGNAL(loadTimeBordersFinishedOut()), this, SLOT(loadTimeBordersFinished()));
+    networkManager->loadTimeBorders(info->filename);
 }
-
 
 void MainWindow::loadTimeBordersFinished()
 {
+    uiGR->minTimeValue->setText(QString::number(info->minMax.first));
+    uiGR->maxTimeValue->setText(QString::number(info->minMax.second));
+
+    QDoubleValidator* validator = new QDoubleValidator(0, info->minMax.second, 10, this);
+    QLocale locale(QLocale::English);
+
+    validator->setLocale(locale);
+    uiGR->startTimeEdit->setValidator(validator);
+    uiGR->endTimeEdit->setValidator(validator);
 }
 
 void MainWindow::loginFinished()
@@ -97,6 +111,7 @@ void MainWindow::on_chooseFileButton_clicked()
         uiGR->setupUi(this);
         connect(networkManager, SIGNAL(loadNumProcessorsFinishedOut()), this, SLOT(loadNumProcessorsFinished()));
         networkManager->loadNumProcessors(filename);
+
         tableManager = new TableManager(uiGR->timeline);
 
     } else {
@@ -106,7 +121,14 @@ void MainWindow::on_chooseFileButton_clicked()
 
 void MainWindow::on_loadDataButton_clicked()
 {
-    networkManager->loadNumProcessors(info->filename);
+    int numProcessors = uiGR->numProc->text().toInt();
+    std::pair<double, double> minMax = std::make_pair(uiGR->startTimeEdit->text().toDouble(), uiGR->endTimeEdit->text().toDouble());
+    if (!dataFilter->checkMinMaxTime(minMax.first, minMax.second)) {
+        QMessageBox::information(this, "Error", "Incorrect data!");
+        return;
+    }
+    tableManager->setRowCount(info->numProcessors);
+    networkManager->loadData(info->filename, tableManager);
+
+    //networkManager->loadNumProcessors(info->filename);
 }
-
-

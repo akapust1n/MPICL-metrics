@@ -8,6 +8,7 @@
 #include <TableManager.h>
 #include <utility>
 #include <NetworkManager.h>
+#include "DataFilter.h"
 
 namespace Ui {
 class MainWindow;
@@ -45,7 +46,8 @@ private:
     TableManager *tableManager;
     Info *info;
     NetworkManager *networkManager;
-    std::pair<double,double> minMax;
+    DataFilter *dataFilter;
+
     int statusRequest=0;
     int offset = 0;
 

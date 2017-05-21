@@ -1,11 +1,17 @@
 #include "NetworkManager.h"
-#include <QUrlQuery>
 #include <QNetworkAccessManager>
+#include <QUrlQuery>
 
-NetworkManager::NetworkManager(Info *_info): info(_info)
+NetworkManager::NetworkManager(Info* _info)
+    : info(_info)
 {
     manager = new QNetworkAccessManager(this);
+}
 
+NetworkManager::~NetworkManager()
+{
+    delete manager;
+    delete reply;
 }
 
 void NetworkManager::login(QString name, QString password)
@@ -24,7 +30,7 @@ void NetworkManager::login(QString name, QString password)
     request.setUrl(url);
     reply = manager->get(request);
     connect(reply, SIGNAL(finished()),
-            this, SLOT(loginFinished()));
+        this, SLOT(loginFinished()));
 }
 
 void NetworkManager::loadFileList()
@@ -40,7 +46,6 @@ void NetworkManager::loadFileList()
     reply = manager->get(request);
     connect(reply, SIGNAL(finished()),
         this, SLOT(loadFileListFinished()));
-
 }
 
 void NetworkManager::loadNumProcessors(QString filename)
@@ -57,18 +62,27 @@ void NetworkManager::loadNumProcessors(QString filename)
         this, SLOT(loadNumProcessorsFinished()));
 }
 
-void NetworkManager::loadTimeBorders()
+void NetworkManager::loadTimeBorders(QString filename)
 {
+    QUrlQuery query;
 
+    query.addQueryItem("filename", filename);
+    QNetworkRequest request;
+    QUrl url("http://localhost:8080/api/getTimeBorders");
+    url.setQuery(query.query());
+    request.setUrl(url);
+    reply = manager->get(request);
+    connect(reply, SIGNAL(finished()),
+        this, SLOT(loadTimeBordersFinished()));
 }
 
-void NetworkManager::loadData(QString filename,  TableManager *_tableManager)
+void NetworkManager::loadData(QString filename, TableManager* _tableManager)
 {
     tableManager = _tableManager;
     offset = 0;
     QUrlQuery query;
     query.addQueryItem("filename", filename);
-    query.addQueryItem("limit",  QString::number(limit));
+    query.addQueryItem("limit", QString::number(limit));
     query.addQueryItem("offset", QString::number(offset));
 
     QNetworkRequest request;
@@ -77,14 +91,14 @@ void NetworkManager::loadData(QString filename,  TableManager *_tableManager)
     request.setUrl(url);
     reply = manager->get(request);
     connect(reply, SIGNAL(finished()),
-            this, SLOT(loadDataSlice()));
+        this, SLOT(loadDataSliceFinished()));
 }
 
 void NetworkManager::loadData()
 {
     QUrlQuery query;
     query.addQueryItem("filename", info->filename);
-    query.addQueryItem("limit",  QString::number(limit));
+    query.addQueryItem("limit", QString::number(limit));
     query.addQueryItem("offset", QString::number(offset));
 
     QNetworkRequest request;
@@ -93,16 +107,13 @@ void NetworkManager::loadData()
     request.setUrl(url);
     reply = manager->get(request);
     connect(reply, SIGNAL(finished()),
-        this, SLOT(loadDataSlice()));
-
+        this, SLOT(loadDataSliceFinished()));
 }
 
 void NetworkManager::loginFinished()
 {
     info->token = requestHandler.getToken(reply->readAll());
     emit loginFinishedOut();
-
-
 }
 
 void NetworkManager::loadFileListFinished()
@@ -111,19 +122,13 @@ void NetworkManager::loadFileListFinished()
     emit loadFileListFinishedOut();
 }
 
-void NetworkManager::loadFileFinished()
-{
-
-
-}
-
 void NetworkManager::loadNumProcessorsFinished()
 {
     info->numProcessors = requestHandler.getNumProcessors(reply->readAll());
     emit loadNumProcessorsFinishedOut();
 }
 
-void NetworkManager::loadDataSlice()
+void NetworkManager::loadDataSliceFinished()
 {
     auto items = requestHandler.getItems(reply->readAll());
     offset += offsetStep;
@@ -132,5 +137,11 @@ void NetworkManager::loadDataSlice()
 
         loadData();
     }
+}
+
+void NetworkManager::loadTimeBordersFinished()
+{
+    info->minMax= requestHandler.getBordes(reply->readAll());
+    emit loadTimeBordersFinishedOut();
 
 }

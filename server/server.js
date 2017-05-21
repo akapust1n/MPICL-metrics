@@ -127,6 +127,9 @@ apiRoutes.get("/getFile", function (req, res) {
     let filename = req.query.filename;
     let offset = parseInt(req.query.offset);
     let limit = parseInt(req.query.limit);
+    let timeMin = parseFloat(req.query.timeMin);
+    let timeMax= parseFloat(req.query.timeMin);
+
     console.log("OFFSET");
     console.log(filename, offset);
     let query = connection.query('SELECT * from Tracks  WHERE filename=? LIMIT ? OFFSET ? ', [filename, limit, offset], function (err, rows, fields) {
@@ -189,6 +192,29 @@ apiRoutes.get("/getNumProcessors", function (req, res) {
     });
 
 });
+
+apiRoutes.get("/getEventInfo", function (req, res) {
+    let filename = req.query.code;
+    // let offset = parseInt(req.query.offset);
+    // let limit = parseInt(req.query.limit);
+    // let timeMin = parseFloat(req.query.timeMin);
+    // let timeMax= parseFloat(req.query.timeMin);
+    //
+    // console.log("OFFSET");
+    // console.log(filename, offset);
+    // let query = connection.query('SELECT * from Tracks  WHERE filename=? LIMIT ? OFFSET ? ', [filename, limit, offset], function (err, rows, fields) {
+    //
+    //     if (!err)
+    //         console.log('The solution is: ', rows);
+    //     else
+    //         console.log('Error while performing Query.');
+    //     console.log(rows);
+    //     res.json({result: rows});
+    //
+    // });
+
+});
+apiRoutes.post("/stats")
 //-----------------------------
 //AUTH
 //-----------------------------

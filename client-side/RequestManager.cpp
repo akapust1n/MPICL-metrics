@@ -1,76 +1,71 @@
 #include "RequestManager.h"
-#include <iostream>
-#include <QJsonObject>
 #include <QByteArray>
-#include <QJsonDocument>
 #include <QJsonArray>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <iostream>
 
 RequestManager::RequestManager()
 {
-
 }
 
 QString RequestManager::getToken(QByteArray array)
 {
-    QJsonDocument document =  QJsonDocument::fromJson(array);
+    QJsonDocument document = QJsonDocument::fromJson(array);
     QJsonObject itemObject = document.object();
     QString response = itemObject["token"].toString();
 
-    return  response;
-    
+    return response;
 }
 
 QVector<Item> RequestManager::getItems(QByteArray array)
 {
     QVector<Item> result;
-    std::cout<<"PROCS "<<array.toStdString()<<std::endl;
-    QJsonDocument document =  QJsonDocument::fromJson(array);
+    std::cout << "PROCS " << array.toStdString() << std::endl;
+    QJsonDocument document = QJsonDocument::fromJson(array);
     QJsonObject itemObject = document.object();
     QJsonArray resultArray = itemObject["result"].toArray();
-    for(int i=0;i<resultArray.size();i++){
-          result.append(fromQJsonArray(resultArray,i));
+    for (int i = 0; i < resultArray.size(); i++) {
+        result.append(fromQJsonArray(resultArray, i));
     }
-    return  result;
-    
+    return result;
 }
 
 QStringList RequestManager::getFileList(QByteArray array)
 {
     QStringList result;
-    QJsonDocument document =  QJsonDocument::fromJson(array);
+    QJsonDocument document = QJsonDocument::fromJson(array);
     QJsonObject itemObject = document.object();
     QJsonArray fileArray = itemObject["message"].toArray();
-    for(auto temp:fileArray){
-      std::cout<<temp.toString().toStdString()<<std::endl;
-      result.append(temp.toString());
+    for (auto temp : fileArray) {
+        std::cout << temp.toString().toStdString() << std::endl;
+        result.append(temp.toString());
     }
-    return  result;
-
+    return result;
 }
 
 int RequestManager::getNumProcessors(QByteArray array)
 {
-    std::cout<<"PROCS "<<array.toStdString()<<std::endl;
-    QJsonDocument document =  QJsonDocument::fromJson(array);
+    std::cout << "PROCS " << array.toStdString() << std::endl;
+    QJsonDocument document = QJsonDocument::fromJson(array);
     QJsonObject itemObject = document.object();
     QJsonArray resultArray = itemObject["result"].toArray();
     QJsonObject temp1 = resultArray.at(0).toObject();
     int result = temp1["max(prid)"].toInt();
 
-    return  result;
+    return result;
 }
 
 std::pair<double, double> RequestManager::getBordes(QByteArray array)
 {
-    std::cout<<"PROCS "<<array.toStdString()<<std::endl;
-    QJsonDocument document =  QJsonDocument::fromJson(array);
+    std::cout << "PROCS " << array.toStdString() << std::endl;
+    QJsonDocument document = QJsonDocument::fromJson(array);
     QJsonObject itemObject = document.object();
     QJsonArray resultArray = itemObject["result"].toArray();
     QJsonObject temp1 = resultArray.at(0).toObject();
-  //  int result = temp1["max(prid)"].toInt();
+    std::pair<double, double> result = std::make_pair(temp1["MIN(time)"].toDouble(), temp1["MAX(time)"].toDouble());
 
-    //return  result;
-
+    return result;
 }
 
 Item RequestManager::fromQJsonArray(QJsonArray array, int index)
@@ -79,12 +74,9 @@ Item RequestManager::fromQJsonArray(QJsonArray array, int index)
     QJsonObject object = array.at(index).toObject();
     item.pid = object["pid"].toInt();
     item.prid = object["prid"].toInt();
-    item.time= object["time"].toDouble();
-    item.typeEvent= object["typeEvent"].toInt();
-    item.typeRecord= object["typeRecord"].toInt();
+    item.time = object["time"].toDouble();
+    item.typeEvent = object["typeEvent"].toInt();
+    item.typeRecord = object["typeRecord"].toInt();
 
-    return  item;
-
-
-
+    return item;
 }

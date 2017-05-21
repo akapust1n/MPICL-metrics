@@ -29,8 +29,8 @@
      <rect>
       <x>616</x>
       <y>35</y>
-      <width>211</width>
-      <height>251</height>
+      <width>221</width>
+      <height>301</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout">
@@ -39,12 +39,12 @@
        <item>
         <widget class="QLabel" name="label">
          <property name="text">
-          <string>Start time</string>
+          <string>Start time </string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="lineEdit"/>
+        <widget class="QLineEdit" name="startTimeEdit"/>
        </item>
       </layout>
      </item>
@@ -58,7 +58,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="lineEdit_2"/>
+        <widget class="QLineEdit" name="endTimeEdit"/>
        </item>
       </layout>
      </item>
@@ -67,12 +67,12 @@
        <item>
         <widget class="QLabel" name="label_3">
          <property name="text">
-          <string>Max proc.  </string>
+          <string>Num proc </string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="lineEdit_3"/>
+        <widget class="QLineEdit" name="maxProcEdit"/>
        </item>
       </layout>
      </item>
@@ -97,9 +97,27 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_4">
        <item>
-        <widget class="QLabel" name="maxTime">
+        <widget class="QLabel" name="minTime">
          <property name="text">
           <string>Min start time</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="minTimeValue">
+         <property name="text">
+          <string>TextLabel</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_3">
+       <item>
+        <widget class="QLabel" name="maxTime">
+         <property name="text">
+          <string>Max end time</string>
          </property>
         </widget>
        </item>
@@ -113,27 +131,16 @@
       </layout>
      </item>
      <item>
-      <layout class="QHBoxLayout" name="horizontalLayout_3">
-       <item>
-        <widget class="QLabel" name="minTimeValue">
-         <property name="text">
-          <string>Max end time</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="minTime">
-         <property name="text">
-          <string>TextLabel</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </item>
-     <item>
       <widget class="QPushButton" name="loadDataButton">
        <property name="text">
         <string>Star Load</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton">
+       <property name="text">
+        <string>Detail Data</string>
        </property>
       </widget>
      </item>

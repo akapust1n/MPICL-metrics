@@ -28,14 +28,16 @@ SOURCES += main.cpp\
     Info.cpp \
     RequestManager.cpp \
     TableManager.cpp \
-    NetworkManager.cpp
+    NetworkManager.cpp \
+    DataFilter.cpp
 
 HEADERS  += MainWindow.h \
     Info.h \
     RequestManager.h \
     Item.h \
     TableManager.h \
-    NetworkManager.h
+    NetworkManager.h \
+    DataFilter.h
 
 FORMS    += MainWindow.ui \
     SelectFile.ui \

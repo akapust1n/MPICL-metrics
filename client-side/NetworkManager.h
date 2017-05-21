@@ -6,16 +6,18 @@
 #include <QNetworkReply>
 #include <QObject>
 #include <RequestManager.h>
+#include "DataFilter.h"
 
 class NetworkManager : public QObject {
     Q_OBJECT
 
 public:
     NetworkManager(Info* _info);
+    ~NetworkManager();
     void login(QString name, QString password);
     void loadFileList();
     void loadNumProcessors(QString filename);
-    void loadTimeBorders();
+    void loadTimeBorders(QString filename);
     void loadData(QString filename, TableManager* _tableManager);
     void loadData();
 
@@ -29,9 +31,9 @@ signals:
 private slots:
     void loginFinished();
     void loadFileListFinished();
-    void loadFileFinished();
     void loadNumProcessorsFinished();
-    void loadDataSlice();
+    void loadDataSliceFinished();
+    void loadTimeBordersFinished();
 
 private:
     QNetworkAccessManager* manager;
