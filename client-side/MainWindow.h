@@ -7,6 +7,7 @@
 #include <Info.h>
 #include <TableManager.h>
 #include <utility>
+#include <NetworkManager.h>
 
 namespace Ui {
 class MainWindow;
@@ -24,12 +25,10 @@ public:
 
 private slots:
     void on_pushButton_clicked();
-    void loginFinished();
-    void loadFileFinished();
+    void loadFileListFinished();
     void loadNumProcessorsFinished();
-    void loadDataSlice();
     void loadTimeBordersFinished();
-
+    void loginFinished();
     
     void on_loadFileListButton_clicked();
 
@@ -43,12 +42,10 @@ private:
     Ui::MainWindow *ui;
     Ui::SelectFile *uiSF;
     Ui::Graphics *uiGR;
-    QNetworkAccessManager *manager;
-    RequestManager requestHandler;
     TableManager *tableManager;
-    Info info;
+    Info *info;
+    NetworkManager *networkManager;
     std::pair<double,double> minMax;
-    QNetworkReply *reply;
     int statusRequest=0;
     int offset = 0;
 

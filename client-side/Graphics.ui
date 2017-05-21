@@ -63,6 +63,38 @@
       </layout>
      </item>
      <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_5">
+       <item>
+        <widget class="QLabel" name="label_3">
+         <property name="text">
+          <string>Max proc.  </string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_3"/>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_6">
+       <item>
+        <widget class="QLabel" name="avalibleProc">
+         <property name="text">
+          <string>Avalible procs:</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="numProc">
+         <property name="text">
+          <string>TextLabel</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
       <layout class="QHBoxLayout" name="horizontalLayout_4">
        <item>
         <widget class="QLabel" name="maxTime">
@@ -107,9 +139,8 @@
      </item>
     </layout>
    </widget>
+   <zorder>verticalLayoutWidget</zorder>
    <zorder>timeline</zorder>
-   <zorder>verticalLayoutWidget_2</zorder>
-   <zorder>horizontalLayoutWidget</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">

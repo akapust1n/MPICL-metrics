@@ -27,13 +27,15 @@ SOURCES += main.cpp\
         MainWindow.cpp \
     Info.cpp \
     RequestManager.cpp \
-    TableManager.cpp
+    TableManager.cpp \
+    NetworkManager.cpp
 
 HEADERS  += MainWindow.h \
     Info.h \
     RequestManager.h \
     Item.h \
-    TableManager.h
+    TableManager.h \
+    NetworkManager.h
 
 FORMS    += MainWindow.ui \
     SelectFile.ui \

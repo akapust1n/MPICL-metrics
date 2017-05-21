@@ -16,14 +16,15 @@ MainWindow::MainWindow(QWidget* parent)
     , ui(new Ui::MainWindow)
     , uiGR(new Ui::Graphics)
     , uiSF(new Ui::SelectFile)
-
+    , info(new Info)
 {
     ui->setupUi(this);
+    networkManager = (new NetworkManager(info));
+
     ui->passwordForm->setEchoMode(QLineEdit::Password);
     QPixmap pixmap("/home/alexey/16/PICL-metrics/client-side/loginIcon.png");
     ui->labeImg->resize(pixmap.width(), pixmap.height());
     ui->labeImg->setPixmap(pixmap);
-    manager = new QNetworkAccessManager(this);
     // connect(manager, SIGNAL(finished(QNetworkReply*)),
     //   this, SLOT(replyFinished(QNetworkReply*)));
 }
@@ -38,22 +39,8 @@ void MainWindow::on_pushButton_clicked()
 {
     QString username = ui->loginForm->text();
     QString password = ui->passwordForm->text();
-
-    QNetworkRequest request;
-    QUrl url("http://localhost:8080/api/authenticate");
-
-    QUrlQuery query;
-
-    query.addQueryItem("name", "Nick Cerminara");
-    query.addQueryItem("password", "password");
-    // query.addQueryItem("name", username);
-    // query.addQueryItem("password", password);
-
-    url.setQuery(query.query());
-    request.setUrl(url);
-    reply = manager->get(request);
-    connect(reply, SIGNAL(finished()),
-        this, SLOT(loginFinished()));
+    connect(networkManager, SIGNAL(loginFinishedOut()), this, SLOT(loginFinished()));
+    networkManager->login(username, password);
 
     //    if (username == "test" && password == "test") {
     //        QMessageBox::information(this, "Login", "Username and password is correct");
@@ -64,10 +51,29 @@ void MainWindow::on_pushButton_clicked()
     //    }
 }
 
+void MainWindow::loadFileListFinished()
+{
+    QStringList fileList = info->fileList;
+    uiSF->listFiles->clear();
+    uiSF->listFiles->addItems(fileList);
+}
+
+void MainWindow::loadNumProcessorsFinished()
+{
+
+    tableManager->setRowCount(info->numProcessors);
+    std::cout << "NUM PROC " << info->numProcessors << std::endl;
+    networkManager->loadData(info->filename,tableManager);
+}
+
+
+void MainWindow::loadTimeBordersFinished()
+{
+}
+
 void MainWindow::loginFinished()
 {
-    info.token = requestHandler.getToken(reply->readAll());
-    if (info.token.isEmpty()) {
+    if (info->token.isEmpty()) {
         QMessageBox::information(this, "Login", "Username or password is wrong");
         //        //hide();
     } else {
@@ -76,101 +82,31 @@ void MainWindow::loginFinished()
     }
 }
 
-void MainWindow::loadFileFinished()
-{
-    QStringList fileList = requestHandler.getFileList(reply->readAll());
-    uiSF->listFiles->clear();
-    uiSF->listFiles->addItems(fileList);
-}
-
-void MainWindow::loadNumProcessorsFinished()
-{
-    info.numProcessors = requestHandler.getNumProcessors(reply->readAll());
-    tableManager->setRowCount(info.numProcessors);
-    std::cout << "NUM PROC " << info.numProcessors << std::endl;
-    loadData();
-}
-
-void MainWindow::loadDataSlice()
-{
-    auto items = requestHandler.getItems(reply->readAll());
-    offset += 5;
-    tableManager->appendItems(items);
-    if (items.size()) {
-
-        loadData();
-    }
-}
-
-void MainWindow::loadTimeBordersFinished()
-{
-
-}
-
 void MainWindow::on_loadFileListButton_clicked()
 {
-    QUrlQuery query;
-    query.addQueryItem("name", "Nick Cerminara");
-
-    QNetworkRequest request;
-    QUrl url("http://localhost:8080/api/getFileList");
-
-    url.setQuery(query.query());
-    request.setUrl(url);
-    reply = manager->get(request);
-    connect(reply, SIGNAL(finished()),
-        this, SLOT(loadFileFinished()));
+    networkManager->loadFileList();
+    connect(networkManager, SIGNAL(loadFileListFinishedOut()), this, SLOT(loadFileListFinished()));
 }
 
 void MainWindow::on_chooseFileButton_clicked()
 {
     if (!uiSF->listFiles->selectedItems().isEmpty()) {
-        // QMessageBox::information(this, "Login", uiSF->listFiles->currentItem()->text());
-        info.filename = uiSF->listFiles->currentItem()->text();
-        uiGR->setupUi(this);
-        QUrlQuery query;
-        query.addQueryItem("filename", info.filename);
+        QString filename = uiSF->listFiles->currentItem()->text();
+        info->filename = filename;
 
-        QNetworkRequest request;
-        QUrl url("http://localhost:8080/api/getTimeBorders");
-        url.setQuery(query.query());
-        request.setUrl(url);
-        reply = manager->get(request);
-        connect(reply, SIGNAL(finished()),
-            this, SLOT(loadNumProcessorsFinished()));
+        uiGR->setupUi(this);
+        connect(networkManager, SIGNAL(loadNumProcessorsFinishedOut()), this, SLOT(loadNumProcessorsFinished()));
+        networkManager->loadNumProcessors(filename);
         tableManager = new TableManager(uiGR->timeline);
 
     } else {
-        QMessageBox::information(this, "Login", "unselected");
+        QMessageBox::information(this, "Error", "File unselected!");
     }
 }
 
 void MainWindow::on_loadDataButton_clicked()
 {
-    QUrlQuery query;
-    query.addQueryItem("filename", info.filename);
-
-    QNetworkRequest request;
-    QUrl url("http://localhost:8080/api/getNumProcessors");
-    url.setQuery(query.query());
-    request.setUrl(url);
-    reply = manager->get(request);
-    connect(reply, SIGNAL(finished()),
-        this, SLOT(loadNumProcessorsFinished()));
+    networkManager->loadNumProcessors(info->filename);
 }
 
-void MainWindow::loadData()
-{
-    QUrlQuery query;
-    query.addQueryItem("filename", info.filename);
-    query.addQueryItem("limit", "5");
-    query.addQueryItem("offset", QString::number(offset));
 
-    QNetworkRequest request;
-    QUrl url("http://localhost:8080/api/getFile");
-    url.setQuery(query.query());
-    request.setUrl(url);
-    reply = manager->get(request);
-    connect(reply, SIGNAL(finished()),
-        this, SLOT(loadDataSlice()));
-}

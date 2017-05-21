@@ -1,6 +1,7 @@
 #ifndef INFO_H
 #define INFO_H
 #include <QString>
+#include <QStringList>
 
 class Info
 {
@@ -9,6 +10,7 @@ public:
     QString token;
     int numProcessors;
     QString filename;
+    QStringList fileList;
 };
 
 #endif // INFO_H

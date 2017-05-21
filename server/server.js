@@ -57,9 +57,9 @@ app.get('/setup', function (req, res) {
         password: 'password',
         files: []
     });
-    nick.files.push("test1");
-    nick.files.push("test2");
-    nick.files.push("test3");
+    nick.files.push("trace1");
+    nick.files.push("trace2");
+    nick.files.push("trace3");
     // save the sample user
     nick.save(function (err) {
         if (err) throw err;
@@ -67,6 +67,15 @@ app.get('/setup', function (req, res) {
         console.log('User saved successfully');
         res.json({success: true});
     });
+    let myUser = new User({
+        name: 'User',
+        password: 'password',
+        files: []
+    });
+
+    myUser.files.push("trace2");
+    myUser.files.push("trace3");
+    // save the sample user
 });
 
 apiRoutes.get('/', function (req, res) {
@@ -120,7 +129,7 @@ apiRoutes.get("/getFile", function (req, res) {
     let limit = parseInt(req.query.limit);
     console.log("OFFSET");
     console.log(filename, offset);
-    var query = connection.query('SELECT * from Tracks  WHERE filename=? LIMIT ? OFFSET ? ', [filename, limit, offset], function (err, rows, fields) {
+    let query = connection.query('SELECT * from Tracks  WHERE filename=? LIMIT ? OFFSET ? ', [filename, limit, offset], function (err, rows, fields) {
 
         if (!err)
             console.log('The solution is: ', rows);
