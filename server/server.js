@@ -132,7 +132,7 @@ apiRoutes.get("/getFile", function (req, res) {
 
     console.log("OFFSET");
     console.log(filename, offset);
-    let query = connection.query('SELECT * from Tracks  WHERE filename=? LIMIT ? OFFSET ? ', [filename, limit, offset], function (err, rows, fields) {
+    let query = connection.query('SELECT * from Tracks  WHERE filename=? ORDER BY time asc LIMIT ? OFFSET ?', [filename, limit, offset], function (err, rows, fields) {
 
         if (!err)
             console.log('The solution is: ', rows);

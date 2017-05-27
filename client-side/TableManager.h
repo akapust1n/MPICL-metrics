@@ -9,7 +9,7 @@ class TableManager
 public:
     TableManager(QTableWidget *_widget);
     void appendItems(QVector<Item> &items);
-    void setRowCount(int count);
+    void  setRowCount(int count,int maxCount)  ;
 private:
     QTableWidget *widget;
     QVector<int> rowPointers;

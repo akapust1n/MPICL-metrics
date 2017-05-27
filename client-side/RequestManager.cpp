@@ -21,7 +21,7 @@ QString RequestManager::getToken(QByteArray array)
 QVector<Item> RequestManager::getItems(QByteArray array)
 {
     QVector<Item> result;
-    std::cout << "PROCS " << array.toStdString() << std::endl;
+   // std::cout << "PROCS " << array.toStdString() << std::endl;
     QJsonDocument document = QJsonDocument::fromJson(array);
     QJsonObject itemObject = document.object();
     QJsonArray resultArray = itemObject["result"].toArray();

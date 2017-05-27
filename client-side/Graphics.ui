@@ -44,7 +44,11 @@
         </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="startTimeEdit"/>
+        <widget class="QLineEdit" name="startTimeEdit">
+         <property name="text">
+          <string>0</string>
+         </property>
+        </widget>
        </item>
       </layout>
      </item>
@@ -58,7 +62,11 @@
         </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="endTimeEdit"/>
+        <widget class="QLineEdit" name="endTimeEdit">
+         <property name="text">
+          <string>0.11</string>
+         </property>
+        </widget>
        </item>
       </layout>
      </item>
@@ -72,7 +80,11 @@
         </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="maxProcEdit"/>
+        <widget class="QLineEdit" name="maxProcEdit">
+         <property name="text">
+          <string>6</string>
+         </property>
+        </widget>
        </item>
       </layout>
      </item>

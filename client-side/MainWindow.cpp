@@ -66,8 +66,8 @@ void MainWindow::loadNumProcessorsFinished()
 {
 
     std::cout << "NUM PROC " << info->numProcessors << std::endl;
-    uiGR->numProc->setText(QString::number(info->numProcessors));
-    uiGR->maxProcEdit->setValidator(new QIntValidator(0, info->numProcessors, this));
+    uiGR->numProc->setText(QString::number(info->numProcessors+1));
+    uiGR->maxProcEdit->setValidator(new QIntValidator(0, info->numProcessors+1, this));
     connect(networkManager, SIGNAL(loadTimeBordersFinishedOut()), this, SLOT(loadTimeBordersFinished()));
     networkManager->loadTimeBorders(info->filename);
 }
@@ -121,13 +121,13 @@ void MainWindow::on_chooseFileButton_clicked()
 
 void MainWindow::on_loadDataButton_clicked()
 {
-    int numProcessors = uiGR->numProc->text().toInt();
+    int numProcessors = uiGR->maxProcEdit->text().toInt();
     std::pair<double, double> minMax = std::make_pair(uiGR->startTimeEdit->text().toDouble(), uiGR->endTimeEdit->text().toDouble());
     if (!dataFilter->checkMinMaxTime(minMax.first, minMax.second)) {
         QMessageBox::information(this, "Error", "Incorrect data!");
         return;
     }
-    tableManager->setRowCount(info->numProcessors);
+    tableManager->setRowCount(numProcessors-1,info->numProcessors+1);
     networkManager->loadData(info->filename, tableManager);
 
     //networkManager->loadNumProcessors(info->filename);

@@ -1,31 +1,46 @@
 #include "TableManager.h"
 #include <QTableWidgetItem>
+#include <iostream>
 
 TableManager::TableManager(QTableWidget* _widget)
     : widget(_widget)
 {
+//    rowPointers.resize(20); // :)
+//    for(int i=0;i<20;i++)
+//        rowPointers[i]=0;
 }
 
 void TableManager::appendItems(QVector<Item>& items)
 {
     for (auto item : items) {
         QTableWidgetItem *m_item= new QTableWidgetItem(QString::number(item.time)+QString(" ev ")+QString::number(item.typeEvent));
-        widget->setItem(item.prid,rowPointers[item.prid],m_item);
-        rowPointers[item.prid]++;
-         if(rowPointers[item.prid]>widget->columnCount()){
-              widget->setColumnCount(widget->columnCount() +1);
-         }
+        int size = rowPointers.size();
+        int itemID=item.prid;
+        if((rowPointers[itemID]+2)>widget->columnCount()){
+            int cc=widget->columnCount();
+             widget->setColumnCount(cc+1);
+        }
+      //  if(item.time==0.116299) std::cout<<rowPointers[itemID]<<" "<<item.time<<" "<<item.prid<<std::endl;
 
+        widget->setItem(itemID,rowPointers[itemID],m_item);
+        rowPointers[itemID]+=1;
 
     }
+    //for(auto point:rowPointers)
+       // std::cout<<point<<" ";
+  //  std::cout<<std::endl;
+
 }
 
-void TableManager::setRowCount(int count)
+void TableManager::setRowCount(int count, int maxCount)
 {
+    widget->clear();
+
     widget->setColumnCount(5);
+
     widget->setRowCount(count + 1);
-    rowPointers.clear();
-    rowPointers.resize(count + 1);
-    for (auto &t : rowPointers)
-        t = 0;
+    rowPointers.resize(maxCount); // :)
+    for(int i=0;i<maxCount;i++)
+        rowPointers[i]=0;
+
 }
