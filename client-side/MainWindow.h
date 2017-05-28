@@ -38,6 +38,7 @@ private slots:
     void on_loadDataButton_clicked();
 
     void on_detailButton_clicked();
+    void showEventText(int row,int column);
 
 private:
     void loadData();

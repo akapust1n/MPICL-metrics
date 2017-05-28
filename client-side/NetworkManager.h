@@ -41,7 +41,9 @@ private slots:
     void loadDataSliceFinished();
     void loadTimeBordersFinished();
     void loadNumRecordsFinished();
-    void loadDetailCodeFinished();
+
+private:
+    void loadDetailCodeFinished(int row, int column);
 
 private:
     QNetworkAccessManager* manager;

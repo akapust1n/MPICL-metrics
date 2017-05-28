@@ -15,7 +15,7 @@ public:
     int columnCount() const;
     int rowCount() const;
     int getCellEventCode(int row, int column);
-
+    void appendCellInfo(int row, int column, eventStruct event);
 
 private:
     QTableWidget* widget;

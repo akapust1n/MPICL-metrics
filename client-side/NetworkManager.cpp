@@ -160,7 +160,7 @@ void NetworkManager::detailData()
             QEventLoop loop;
             connect(reply, SIGNAL(finished()), &loop, SLOT(quit()));
             loop.exec();
-            loadDetailCodeFinished();
+            loadDetailCodeFinished(i, j);
 
             std::cout << "AFTER DETAIL" << std::endl;
         }
@@ -211,7 +211,8 @@ void NetworkManager::loadNumRecordsFinished()
     continueLoadData();
 }
 
-void NetworkManager::loadDetailCodeFinished()
+void NetworkManager::loadDetailCodeFinished(int row, int column)
 {
     currentEvent = requestHandler.getEvent(reply->readAll());
+    tableManager->appendCellInfo(row,column,currentEvent);
 }

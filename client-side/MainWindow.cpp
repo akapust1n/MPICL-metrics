@@ -67,8 +67,8 @@ void MainWindow::loadNumProcessorsFinished()
 {
 
     std::cout << "NUM PROC " << info->numProcessors << std::endl;
-    uiGR->numProc->setText(QString::number(info->numProcessors+1));
-    uiGR->maxProcEdit->setValidator(new QIntValidator(0, info->numProcessors+1, this));
+    uiGR->numProc->setText(QString::number(info->numProcessors + 1));
+    uiGR->maxProcEdit->setValidator(new QIntValidator(0, info->numProcessors + 1, this));
     connect(networkManager, SIGNAL(loadTimeBordersFinishedOut()), this, SLOT(loadTimeBordersFinished()));
     networkManager->loadTimeBorders(info->filename);
 }
@@ -111,10 +111,12 @@ void MainWindow::on_chooseFileButton_clicked()
 
         uiGR->setupUi(this);
         uiGR->progressBar->setValue(0);
+        // connect(uiGR->timeline, SIGNAL(QTableWidget::itemClicked(QTableWidgetItem*)),this,SLOT(showEventText(QTableWidgetItem*)));
         connect(networkManager, SIGNAL(loadNumProcessorsFinishedOut()), this, SLOT(loadNumProcessorsFinished()));
         networkManager->loadNumProcessors(filename);
 
         tableManager = new TableManager(uiGR->timeline);
+        connect(uiGR->timeline, SIGNAL(cellClicked(int, int)), this, SLOT(showEventText(int, int)));
 
     } else {
         QMessageBox::information(this, "Error", "File unselected!");
@@ -130,20 +132,30 @@ void MainWindow::on_loadDataButton_clicked()
         return;
     }
     info->minMax = minMax;
-    tableManager->setRowCount(numProcessors-1,info->numProcessors+1);
+    tableManager->setRowCount(numProcessors - 1, info->numProcessors + 1);
 
-
-    networkManager->loadData(info->filename, tableManager,uiGR->progressBar);
+    networkManager->loadData(info->filename, tableManager, uiGR->progressBar);
 
     //networkManager->loadNumProcessors(info->filename);
 }
 
 void MainWindow::on_detailButton_clicked()
 {
-     info->threads.clear();
-     info->threads.resize(info->numProcessors);
-    for(int i =0;i<info->numProcessors+1;i++)
-       info->threads[i]=0;
+    info->threads.clear();
+    info->threads.resize(info->numProcessors);
+    for (int i = 0; i < info->numProcessors + 1; i++)
+        info->threads[i] = 0;
     networkManager->detailData();
+}
 
+
+
+void MainWindow::showEventText(int row, int column)
+{
+    uiGR->textBrowser->clear();
+    QString text = uiGR->timeline->item(row,column)?uiGR->timeline->item(row,column)->text():"";
+    if(text.isEmpty())
+        return;
+    uiGR->textBrowser->setText(text);
+    std::cout << "ITEM CLICKED2" << std::endl;
 }

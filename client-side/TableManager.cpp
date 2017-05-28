@@ -54,9 +54,19 @@ int TableManager::rowCount() const
 
 int TableManager::getCellEventCode(int row, int column)
 {
-    QString cellText = widget->item(row, column)?widget->item(row,column)->text():"";
+    QString cellText = widget->item(row, column) ? widget->item(row, column)->text() : "";
     if (cellText.isEmpty())
         return 0;
     int code = cellText.split(" ")[2].toInt();
     return code;
+}
+
+void TableManager::appendCellInfo(int row, int column, eventStruct event)
+{
+    QString currentText = widget->item(row, column)->text();
+    QString newText = QString("\n") + QString("name: ") + event.name + QString("\n");
+    newText += QString("category: ") + event.category + QString("\n");
+    newText += QString("description: ") + event.description;
+    QString result = currentText + newText;
+    widget->item(row, column)->setText(result);
 }

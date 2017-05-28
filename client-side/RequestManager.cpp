@@ -84,11 +84,13 @@ eventStruct RequestManager::getEvent(QByteArray array)
 {
     std::cout << "event " << array.toStdString() << std::endl;
     eventStruct result;
-//    QJsonDocument document = QJsonDocument::fromJson(array);
-//    QJsonObject itemObject = document.object();
-//    QJsonArray resultArray = itemObject["result"].toArray();
-//    QJsonObject temp1 = resultArray.at(0).toObject();
-//    std::pair<double, double> result = std::make_pair(temp1["MIN(time)"].toDouble(), temp1["MAX(time)"].toDouble());
+    QJsonDocument document = QJsonDocument::fromJson(array);
+    QJsonObject itemObject = document.object();
+    QJsonArray resultArray = itemObject["result"].toArray();
+    QJsonObject temp1 = resultArray.at(0).toObject();
+    result.name = temp1["name"].toString();
+    result.description = temp1["description"].toString();
+    result.category = temp1["category"].toString();
     return result;
 
 }
