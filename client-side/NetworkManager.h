@@ -24,7 +24,7 @@ public:
     void loadData(QString filename, TableManager* _tableManager, QProgressBar *_progressBar);
     void loadData();
     void continueLoadData();
-    void detailData();
+    void detailData( QProgressBar *_progressBar);
 
 public slots:
 signals:

@@ -145,7 +145,7 @@ void MainWindow::on_detailButton_clicked()
     info->threads.resize(info->numProcessors);
     for (int i = 0; i < info->numProcessors + 1; i++)
         info->threads[i] = 0;
-    networkManager->detailData();
+    networkManager->detailData(uiGR->progressBar);
 }
 
 

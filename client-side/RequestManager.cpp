@@ -38,7 +38,7 @@ QStringList RequestManager::getFileList(QByteArray array)
     QJsonObject itemObject = document.object();
     QJsonArray fileArray = itemObject["message"].toArray();
     for (auto temp : fileArray) {
-        std::cout << temp.toString().toStdString() << std::endl;
+      //  std::cout << temp.toString().toStdString() << std::endl;
         result.append(temp.toString());
     }
     return result;
@@ -46,7 +46,7 @@ QStringList RequestManager::getFileList(QByteArray array)
 
 int RequestManager::getNumProcessors(QByteArray array)
 {
-    std::cout << "PROCS " << array.toStdString() << std::endl;
+ //   std::cout << "PROCS " << array.toStdString() << std::endl;
     QJsonDocument document = QJsonDocument::fromJson(array);
     QJsonObject itemObject = document.object();
     QJsonArray resultArray = itemObject["result"].toArray();
@@ -58,7 +58,7 @@ int RequestManager::getNumProcessors(QByteArray array)
 
 int RequestManager::getNumRecords(QByteArray array)
 {
-    std::cout << "RECORDS " << array.toStdString() << std::endl;
+   // std::cout << "RECORDS " << array.toStdString() << std::endl;
     QJsonDocument document = QJsonDocument::fromJson(array);
     QJsonObject itemObject = document.object();
     QJsonArray resultArray = itemObject["result"].toArray();
@@ -70,7 +70,7 @@ int RequestManager::getNumRecords(QByteArray array)
 
 std::pair<double, double> RequestManager::getBordes(QByteArray array)
 {
-    std::cout << "PROCS " << array.toStdString() << std::endl;
+    //std::cout << "PROCS " << array.toStdString() << std::endl;
     QJsonDocument document = QJsonDocument::fromJson(array);
     QJsonObject itemObject = document.object();
     QJsonArray resultArray = itemObject["result"].toArray();
@@ -82,7 +82,7 @@ std::pair<double, double> RequestManager::getBordes(QByteArray array)
 
 eventStruct RequestManager::getEvent(QByteArray array)
 {
-    std::cout << "event " << array.toStdString() << std::endl;
+   // std::cout << "event " << array.toStdString() << std::endl;
     eventStruct result;
     QJsonDocument document = QJsonDocument::fromJson(array);
     QJsonObject itemObject = document.object();
@@ -104,6 +104,9 @@ Item RequestManager::fromQJsonArray(QJsonArray array, int index)
     item.time = object["time"].toDouble();
     item.typeEvent = object["typeEvent"].toInt();
     item.typeRecord = object["typeRecord"].toInt();
-
+    item.destination=object["data"].toString().toInt();
+    std::cout<<"DATA"<<item.destination<<std::endl;
+    //if(item.destination>1000) item.destination = -1; // :)
+   //  std::cout<<"DATA"<<object["data"].toString().toStdString()<<std::endl;
     return item;
 }

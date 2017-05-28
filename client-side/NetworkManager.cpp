@@ -140,12 +140,17 @@ void NetworkManager::continueLoadData()
         this, SLOT(loadDataSliceFinished()));
 }
 
-void NetworkManager::detailData()
+void NetworkManager::detailData( QProgressBar *_progressBar)
 {
+    progressBar=_progressBar;
+   // progressBar->setValue(0);
+    progressCount = 0;
     int rowCount = tableManager->rowCount();
     int columnCount = tableManager->columnCount();
     for (int i = 0; i < rowCount; i++)
         for (int j = 0; j < columnCount - 1; j++) {
+            progressCount++;
+             progressBar->setValue(progressCount*1.0/(rowCount*(columnCount-1))*100);
             int code = tableManager->getCellEventCode(i, j);
             if (!code)
                 continue;
@@ -162,7 +167,7 @@ void NetworkManager::detailData()
             loop.exec();
             loadDetailCodeFinished(i, j);
 
-            std::cout << "AFTER DETAIL" << std::endl;
+           // std::cout << "AFTER DETAIL" << std::endl;
         }
 }
 
@@ -191,7 +196,7 @@ void NetworkManager::loadDataSliceFinished()
     tableManager->appendItems(items);
     if (items.size()) {
         progressCount += 5; //должно быть после дата лоада, но не суть
-        std::cout << progressCount * 1.0 / info->numRecords * 100 << std::endl;
+       // std::cout << progressCount * 1.0 / info->numRecords * 100 << std::endl;
         progressBar->setValue(static_cast<int>(progressCount * 1.0 / info->numRecords * 100));
         loadData();
     }

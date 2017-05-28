@@ -6,6 +6,7 @@ struct Item {
     double time;
     int prid;
     int pid;
+    int destination;
 };
 
 #endif // ITEM_H

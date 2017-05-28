@@ -13,7 +13,11 @@ TableManager::TableManager(QTableWidget* _widget)
 void TableManager::appendItems(QVector<Item>& items)
 {
     for (auto item : items) {
-        QTableWidgetItem* m_item = new QTableWidgetItem(QString::number(item.time) + QString(" ev ") + QString::number(item.typeEvent));
+
+        QString itemData = QString::number(item.time) + QString(" ev ") + QString::number(item.typeEvent) + QString("\n");
+        if (item.destination != -1)
+            itemData += QString(" dest: ") + QString::number(item.destination);
+        QTableWidgetItem* m_item = new QTableWidgetItem(itemData);
         int size = rowPointers.size();
         int itemID = item.prid;
         if ((rowPointers[itemID] + 2) > widget->columnCount()) {

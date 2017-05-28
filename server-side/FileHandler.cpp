@@ -9,6 +9,7 @@
 #include <string>
 #include <zdb/zdb.h>
 #include <zdb/PreparedStatement.h>
+
 #include <zdb/Connection.h>
 
 
@@ -73,9 +74,11 @@ void FileHandler::writeToDB(QString line)
     PreparedStatement_setInt(p, 7, spisok[5].toInt());
 
     QString data = " ";
-    if (spisok.size() ==10) { //only destination
+    if (spisok.size() == 10) { //only destination
 
-            data += spisok[9];
+        data += spisok[9];
+    } else {
+        data = QString::number(-1);
     }
     auto temp = data.toStdString().c_str();
 

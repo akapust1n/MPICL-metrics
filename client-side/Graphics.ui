@@ -17,8 +17,8 @@
    <widget class="QTableWidget" name="timeline">
     <property name="geometry">
      <rect>
-      <x>20</x>
-      <y>20</y>
+      <x>10</x>
+      <y>10</y>
       <width>591</width>
       <height>451</height>
      </rect>
@@ -27,8 +27,8 @@
    <widget class="QWidget" name="verticalLayoutWidget">
     <property name="geometry">
      <rect>
-      <x>616</x>
-      <y>35</y>
+      <x>610</x>
+      <y>0</y>
       <width>221</width>
       <height>301</height>
      </rect>
@@ -161,9 +161,9 @@
    <widget class="QProgressBar" name="progressBar">
     <property name="geometry">
      <rect>
-      <x>620</x>
-      <y>340</y>
-      <width>211</width>
+      <x>612</x>
+      <y>304</y>
+      <width>217</width>
       <height>23</height>
      </rect>
     </property>
@@ -174,10 +174,10 @@
    <widget class="QTextBrowser" name="textBrowser">
     <property name="geometry">
      <rect>
-      <x>620</x>
-      <y>370</y>
-      <width>211</width>
-      <height>91</height>
+      <x>612</x>
+      <y>335</y>
+      <width>217</width>
+      <height>125</height>
      </rect>
     </property>
    </widget>
