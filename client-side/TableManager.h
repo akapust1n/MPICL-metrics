@@ -8,7 +8,7 @@
 class TableManager {
 public:
     TableManager(QTableWidget* _widget);
-    void appendItems(QVector<Item>& items);
+    void appendItems(QVector<Item>& items,Info *info);
     void setRowCount(int count, int maxCount);
     void detailTypes(Info* info);
     QTableWidgetItem* getItem(int row, int column);
@@ -16,6 +16,7 @@ public:
     int rowCount() const;
     int getCellEventCode(int row, int column);
     void appendCellInfo(int row, int column, eventStruct event);
+    void analyzeSendEvents();
 
 private:
     QTableWidget* widget;

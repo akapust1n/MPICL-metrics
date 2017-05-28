@@ -193,7 +193,7 @@ void NetworkManager::loadDataSliceFinished()
 {
     auto items = requestHandler.getItems(reply->readAll());
     offset += offsetStep;
-    tableManager->appendItems(items);
+    tableManager->appendItems(items,info);
     if (items.size()) {
         progressCount += 5; //должно быть после дата лоада, но не суть
        // std::cout << progressCount * 1.0 / info->numRecords * 100 << std::endl;

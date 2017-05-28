@@ -1,6 +1,7 @@
 #include "TableManager.h"
 #include <QTableWidgetItem>
 #include <iostream>
+#include <Info.h>
 
 TableManager::TableManager(QTableWidget* _widget)
     : widget(_widget)
@@ -10,15 +11,16 @@ TableManager::TableManager(QTableWidget* _widget)
     //        rowPointers[i]=0;
 }
 
-void TableManager::appendItems(QVector<Item>& items)
+void TableManager::appendItems(QVector<Item>& items,Info *info)
 {
     for (auto item : items) {
 
         QString itemData = QString::number(item.time) + QString(" ev ") + QString::number(item.typeEvent) + QString("\n");
-        if (item.destination != -1)
+        if (item.destination != -1){
             itemData += QString(" dest: ") + QString::number(item.destination);
+            info->threads[item.destination]++;
+        }
         QTableWidgetItem* m_item = new QTableWidgetItem(itemData);
-        int size = rowPointers.size();
         int itemID = item.prid;
         if ((rowPointers[itemID] + 2) > widget->columnCount()) {
             int cc = widget->columnCount();
@@ -70,7 +72,16 @@ void TableManager::appendCellInfo(int row, int column, eventStruct event)
     QString currentText = widget->item(row, column)->text();
     QString newText = QString("\n") + QString("name: ") + event.name + QString("\n");
     newText += QString("category: ") + event.category + QString("\n");
+    if(event.category=="send events")
+        widget->item(row,column)->setBackground(Qt::red);
+    if(event.category=="receive events")
+        widget->item(row,column)->setBackground(Qt::green);
     newText += QString("description: ") + event.description;
     QString result = currentText + newText;
     widget->item(row, column)->setText(result);
+}
+
+void TableManager::analyzeSendEvents()
+{
+
 }
