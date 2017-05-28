@@ -1,4 +1,5 @@
 #include "NetworkManager.h"
+#include <QEventLoop>
 #include <QNetworkAccessManager>
 #include <QProgressBar>
 #include <QUrlQuery>
@@ -101,7 +102,6 @@ void NetworkManager::loadData(QString filename, TableManager* _tableManager, QPr
     progressBar = _progressBar;
     progressCount = 5;
     loadNumRecords(filename);
-
 }
 
 void NetworkManager::loadData()
@@ -119,7 +119,7 @@ void NetworkManager::loadData()
     request.setUrl(url);
     reply = manager->get(request);
     connect(reply, SIGNAL(finished()),
-            this, SLOT(loadDataSliceFinished()));
+        this, SLOT(loadDataSliceFinished()));
 }
 
 void NetworkManager::continueLoadData()
@@ -138,6 +138,32 @@ void NetworkManager::continueLoadData()
     reply = manager->get(request);
     connect(reply, SIGNAL(finished()),
         this, SLOT(loadDataSliceFinished()));
+}
+
+void NetworkManager::detailData()
+{
+    int rowCount = tableManager->rowCount();
+    int columnCount = tableManager->columnCount();
+    for (int i = 0; i < rowCount; i++)
+        for (int j = 0; j < columnCount - 1; j++) {
+            int code = tableManager->getCellEventCode(i, j);
+            if (!code)
+                continue;
+            QUrlQuery query;
+            query.addQueryItem("code", QString::number(code));
+
+            QNetworkRequest request;
+            QUrl url("http://localhost:8080/api/getCodeInfo");
+            url.setQuery(query.query());
+            request.setUrl(url);
+            reply = manager->get(request);
+            QEventLoop loop;
+            connect(reply, SIGNAL(finished()), &loop, SLOT(quit()));
+            loop.exec();
+            loadDetailCodeFinished();
+
+            std::cout << "AFTER DETAIL" << std::endl;
+        }
 }
 
 void NetworkManager::loginFinished()
@@ -165,10 +191,9 @@ void NetworkManager::loadDataSliceFinished()
     tableManager->appendItems(items);
     if (items.size()) {
         progressCount += 5; //должно быть после дата лоада, но не суть
-        std::cout<<progressCount * 1.0 / info->numRecords * 100<<std::endl;
+        std::cout << progressCount * 1.0 / info->numRecords * 100 << std::endl;
         progressBar->setValue(static_cast<int>(progressCount * 1.0 / info->numRecords * 100));
         loadData();
-
     }
 }
 
@@ -184,5 +209,9 @@ void NetworkManager::loadNumRecordsFinished()
 
     emit loadNumRecordsFinishedOut();
     continueLoadData();
+}
 
+void NetworkManager::loadDetailCodeFinished()
+{
+    currentEvent = requestHandler.getEvent(reply->readAll());
 }

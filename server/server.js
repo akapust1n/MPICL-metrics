@@ -199,6 +199,23 @@ apiRoutes.get("/getNumRecords", function (req, res) {
     });
 });
 
+apiRoutes.get("/getCodeInfo", function (req, res) {
+    let code = req.query.code;
+
+
+    let query = connection.query('SELECT name, description,category from Codes where code=? ', [code], function (err, rows, fields) {
+
+        if (!err)
+            console.log('The solution is: ', rows);
+        else
+            console.log('Error while performing Query.');
+        console.log(rows);
+        res.json({result: rows});
+
+    });
+});
+
+
 apiRoutes.get("/getNumProcessors", function (req, res) {
     let filename = req.query.filename;
     var query = connection.query('select max(prid) from Tracks WHERE filename=?', [filename], function (err, rows, fields) {

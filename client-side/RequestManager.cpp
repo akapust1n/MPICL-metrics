@@ -80,6 +80,19 @@ std::pair<double, double> RequestManager::getBordes(QByteArray array)
     return result;
 }
 
+eventStruct RequestManager::getEvent(QByteArray array)
+{
+    std::cout << "event " << array.toStdString() << std::endl;
+    eventStruct result;
+//    QJsonDocument document = QJsonDocument::fromJson(array);
+//    QJsonObject itemObject = document.object();
+//    QJsonArray resultArray = itemObject["result"].toArray();
+//    QJsonObject temp1 = resultArray.at(0).toObject();
+//    std::pair<double, double> result = std::make_pair(temp1["MIN(time)"].toDouble(), temp1["MAX(time)"].toDouble());
+    return result;
+
+}
+
 Item RequestManager::fromQJsonArray(QJsonArray array, int index)
 {
     Item item;

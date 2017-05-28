@@ -7,6 +7,7 @@
 #include <QStringList>
 #include <QJsonArray>
 #include <utility>
+#include <Info.h>
 
 class RequestManager {
 public:
@@ -17,6 +18,7 @@ public:
     int getNumProcessors(QByteArray array);
     int getNumRecords(QByteArray array);
     std::pair<double,double> getBordes(QByteArray array);
+    eventStruct getEvent(QByteArray array);
 private:
     Item fromQJsonArray(QJsonArray array, int index);
 

@@ -24,6 +24,7 @@ public:
     void loadData(QString filename, TableManager* _tableManager, QProgressBar *_progressBar);
     void loadData();
     void continueLoadData();
+    void detailData();
 
 public slots:
 signals:
@@ -40,6 +41,7 @@ private slots:
     void loadDataSliceFinished();
     void loadTimeBordersFinished();
     void loadNumRecordsFinished();
+    void loadDetailCodeFinished();
 
 private:
     QNetworkAccessManager* manager;
@@ -52,6 +54,7 @@ private:
     int offset = 0;
     int limit = 5;
     int offsetStep = 5;
+    eventStruct currentEvent;
 };
 
 #endif // NETWORKMANAGER_H

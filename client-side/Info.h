@@ -18,5 +18,10 @@ public:
     int numRecords;
 
 };
+struct eventStruct{
+    QString name;
+    QString description;
+    QString category;
+};
 
 #endif // INFO_H
