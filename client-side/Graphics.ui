@@ -150,7 +150,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton">
+      <widget class="QPushButton" name="detailButton">
        <property name="text">
         <string>Detail Data</string>
        </property>
@@ -158,8 +158,33 @@
      </item>
     </layout>
    </widget>
+   <widget class="QProgressBar" name="progressBar">
+    <property name="geometry">
+     <rect>
+      <x>620</x>
+      <y>340</y>
+      <width>211</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="value">
+     <number>24</number>
+    </property>
+   </widget>
+   <widget class="QTextBrowser" name="textBrowser">
+    <property name="geometry">
+     <rect>
+      <x>620</x>
+      <y>370</y>
+      <width>211</width>
+      <height>91</height>
+     </rect>
+    </property>
+   </widget>
    <zorder>verticalLayoutWidget</zorder>
    <zorder>timeline</zorder>
+   <zorder>progressBar</zorder>
+   <zorder>textBrowser</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">

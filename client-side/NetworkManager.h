@@ -7,6 +7,7 @@
 #include <QObject>
 #include <RequestManager.h>
 #include "DataFilter.h"
+#include <QProgressBar>
 
 class NetworkManager : public QObject {
     Q_OBJECT
@@ -17,9 +18,12 @@ public:
     void login(QString name, QString password);
     void loadFileList();
     void loadNumProcessors(QString filename);
+    void loadNumRecords(QString filename);
+
     void loadTimeBorders(QString filename);
-    void loadData(QString filename, TableManager* _tableManager);
+    void loadData(QString filename, TableManager* _tableManager, QProgressBar *_progressBar);
     void loadData();
+    void continueLoadData();
 
 public slots:
 signals:
@@ -27,6 +31,7 @@ signals:
     void loadFileListFinishedOut();
     void loadTimeBordersFinishedOut();
     void loadNumProcessorsFinishedOut();
+    void loadNumRecordsFinishedOut();
 
 private slots:
     void loginFinished();
@@ -34,6 +39,7 @@ private slots:
     void loadNumProcessorsFinished();
     void loadDataSliceFinished();
     void loadTimeBordersFinished();
+    void loadNumRecordsFinished();
 
 private:
     QNetworkAccessManager* manager;
@@ -41,6 +47,8 @@ private:
     RequestManager requestHandler;
     Info* info;
     TableManager* tableManager;
+    QProgressBar *progressBar;
+    int progressCount;
     int offset = 0;
     int limit = 5;
     int offsetStep = 5;

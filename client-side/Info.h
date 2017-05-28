@@ -3,6 +3,7 @@
 #include <QString>
 #include <QStringList>
 #include <utility>
+#include <vector>
 
 class Info
 {
@@ -13,6 +14,9 @@ public:
     QString filename;
     QStringList fileList;
     std::pair<double, double> minMax;
+    std::vector<int> threads;
+    int numRecords;
+
 };
 
 #endif // INFO_H

@@ -21,7 +21,7 @@ QString RequestManager::getToken(QByteArray array)
 QVector<Item> RequestManager::getItems(QByteArray array)
 {
     QVector<Item> result;
-   // std::cout << "PROCS " << array.toStdString() << std::endl;
+    // std::cout << "PROCS " << array.toStdString() << std::endl;
     QJsonDocument document = QJsonDocument::fromJson(array);
     QJsonObject itemObject = document.object();
     QJsonArray resultArray = itemObject["result"].toArray();
@@ -52,6 +52,18 @@ int RequestManager::getNumProcessors(QByteArray array)
     QJsonArray resultArray = itemObject["result"].toArray();
     QJsonObject temp1 = resultArray.at(0).toObject();
     int result = temp1["max(prid)"].toInt();
+
+    return result;
+}
+
+int RequestManager::getNumRecords(QByteArray array)
+{
+    std::cout << "RECORDS " << array.toStdString() << std::endl;
+    QJsonDocument document = QJsonDocument::fromJson(array);
+    QJsonObject itemObject = document.object();
+    QJsonArray resultArray = itemObject["result"].toArray();
+    QJsonObject temp1 = resultArray.at(0).toObject();
+    int result = temp1["COUNT(*)"].toInt();
 
     return result;
 }

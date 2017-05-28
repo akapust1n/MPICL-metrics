@@ -128,11 +128,11 @@ apiRoutes.get("/getFile", function (req, res) {
     let offset = parseInt(req.query.offset);
     let limit = parseInt(req.query.limit);
     let timeMin = parseFloat(req.query.timeMin);
-    let timeMax= parseFloat(req.query.timeMin);
+    let timeMax= parseFloat(req.query.timeMax);
 
     console.log("OFFSET");
     console.log(filename, offset);
-    let query = connection.query('SELECT * from Tracks  WHERE filename=? ORDER BY time asc LIMIT ? OFFSET ?', [filename, limit, offset], function (err, rows, fields) {
+    let query = connection.query('SELECT * from Tracks  WHERE filename=? AND time>=? AND time<=?  ORDER BY time asc LIMIT ? OFFSET ?', [filename,timeMin, timeMax, limit, offset], function (err, rows, fields) {
 
         if (!err)
             console.log('The solution is: ', rows);
@@ -142,6 +142,8 @@ apiRoutes.get("/getFile", function (req, res) {
         res.json({result: rows});
 
     });
+    console.log(timeMax);
+    console.log(timeMin);
 
 });
 
@@ -179,6 +181,24 @@ apiRoutes.get("/getFileList", function (req, res) {
 
     });
 });
+apiRoutes.get("/getNumRecords", function (req, res) {
+    let filename = req.query.filename;
+
+    let timeMin = parseFloat(req.query.timeMin);
+    let timeMax= parseFloat(req.query.timeMax);
+
+    let query = connection.query('SELECT COUNT(*) from Tracks  WHERE filename=? AND time>=? AND time<=? ', [filename,timeMin, timeMax], function (err, rows, fields) {
+
+        if (!err)
+            console.log('The solution is: ', rows);
+        else
+            console.log('Error while performing Query.');
+        console.log(rows);
+        res.json({result: rows});
+
+    });
+});
+
 apiRoutes.get("/getNumProcessors", function (req, res) {
     let filename = req.query.filename;
     var query = connection.query('select max(prid) from Tracks WHERE filename=?', [filename], function (err, rows, fields) {

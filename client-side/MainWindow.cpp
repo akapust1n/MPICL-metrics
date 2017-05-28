@@ -26,6 +26,7 @@ MainWindow::MainWindow(QWidget* parent)
     QPixmap pixmap("/home/alexey/16/PICL-metrics/client-side/loginIcon.png");
     ui->labeImg->resize(pixmap.width(), pixmap.height());
     ui->labeImg->setPixmap(pixmap);
+    //uiGR->progressBar->setValue(0);
     // connect(manager, SIGNAL(finished(QNetworkReply*)),
     //   this, SLOT(replyFinished(QNetworkReply*)));
 }
@@ -109,6 +110,7 @@ void MainWindow::on_chooseFileButton_clicked()
         info->filename = filename;
 
         uiGR->setupUi(this);
+        uiGR->progressBar->setValue(0);
         connect(networkManager, SIGNAL(loadNumProcessorsFinishedOut()), this, SLOT(loadNumProcessorsFinished()));
         networkManager->loadNumProcessors(filename);
 
@@ -127,8 +129,19 @@ void MainWindow::on_loadDataButton_clicked()
         QMessageBox::information(this, "Error", "Incorrect data!");
         return;
     }
+    info->minMax = minMax;
     tableManager->setRowCount(numProcessors-1,info->numProcessors+1);
-    networkManager->loadData(info->filename, tableManager);
+
+
+    networkManager->loadData(info->filename, tableManager,uiGR->progressBar);
 
     //networkManager->loadNumProcessors(info->filename);
+}
+
+void MainWindow::on_detailButton_clicked()
+{
+
+    for(int i =0;i<info->numProcessors+1;i++)
+       info->threads[i]=0;
+
 }

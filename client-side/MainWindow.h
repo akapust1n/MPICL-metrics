@@ -37,6 +37,8 @@ private slots:
 
     void on_loadDataButton_clicked();
 
+    void on_detailButton_clicked();
+
 private:
     void loadData();
 private:

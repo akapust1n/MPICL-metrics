@@ -20,15 +20,12 @@ void TableManager::appendItems(QVector<Item>& items)
             int cc=widget->columnCount();
              widget->setColumnCount(cc+1);
         }
-      //  if(item.time==0.116299) std::cout<<rowPointers[itemID]<<" "<<item.time<<" "<<item.prid<<std::endl;
 
         widget->setItem(itemID,rowPointers[itemID],m_item);
         rowPointers[itemID]+=1;
 
     }
-    //for(auto point:rowPointers)
-       // std::cout<<point<<" ";
-  //  std::cout<<std::endl;
+
 
 }
 
@@ -42,5 +39,10 @@ void TableManager::setRowCount(int count, int maxCount)
     rowPointers.resize(maxCount); // :)
     for(int i=0;i<maxCount;i++)
         rowPointers[i]=0;
+
+}
+
+void TableManager::detailTypes(Info *info)
+{
 
 }
