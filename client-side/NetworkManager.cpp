@@ -77,8 +77,10 @@ void NetworkManager::loadNumRecords(QString filename)
     url.setQuery(query.query());
     request.setUrl(url);
     reply = manager->get(request);
-    connect(reply, SIGNAL(finished()),
-        this, SLOT(loadNumRecordsFinished()));
+    QEventLoop loop;
+    connect(reply, SIGNAL(finished()), this, SLOT(loadNumRecordsFinished()));
+    loop.exec();
+
 }
 
 void NetworkManager::loadTimeBorders(QString filename)

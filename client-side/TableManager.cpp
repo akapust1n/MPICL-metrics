@@ -2,6 +2,7 @@
 #include <QTableWidgetItem>
 #include <iostream>
 #include <Info.h>
+#include <QVector>
 
 TableManager::TableManager(QTableWidget* _widget)
     : widget(_widget)
@@ -81,7 +82,20 @@ void TableManager::appendCellInfo(int row, int column, eventStruct event)
     widget->item(row, column)->setText(result);
 }
 
-void TableManager::analyzeSendEvents()
+void TableManager::analyzeEvents(Info *info)
 {
+    std::vector<int> temp=info->threads;
+    int _rowCount = rowCount();
+    int _columnCount = columnCount();
+    for (int i = 0; i < _rowCount; i++)
+        for (int j = 0; j < _columnCount - 1; j++) {
+            if(widget->item(i,j)){
+            if(widget->item(i,j)->background()==Qt::green)
+            temp[i]--;
+            if(temp[i]<0 and widget->item(i,j)->background()==Qt::red)
+                widget->item(i,j)->setBackground(Qt::lightGray);
+            }
+           // std::cout << "AFTER DETAIL" << std::endl;
+        }
 
 }

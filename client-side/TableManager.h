@@ -16,7 +16,7 @@ public:
     int rowCount() const;
     int getCellEventCode(int row, int column);
     void appendCellInfo(int row, int column, eventStruct event);
-    void analyzeSendEvents();
+    void analyzeEvents(Info *info);
 
 private:
     QTableWidget* widget;

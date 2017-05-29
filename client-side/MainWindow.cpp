@@ -68,6 +68,10 @@ void MainWindow::loadNumProcessorsFinished()
 
     std::cout << "NUM PROC " << info->numProcessors << std::endl;
     uiGR->numProc->setText(QString::number(info->numProcessors + 1));
+            info->threads.clear();
+            for(int i=0;i<info->numProcessors;i++){
+                     info->threads.push_back(0);
+            }
     uiGR->maxProcEdit->setValidator(new QIntValidator(0, info->numProcessors + 1, this));
     connect(networkManager, SIGNAL(loadTimeBordersFinishedOut()), this, SLOT(loadTimeBordersFinished()));
     networkManager->loadTimeBorders(info->filename);
@@ -114,10 +118,7 @@ void MainWindow::on_chooseFileButton_clicked()
         // connect(uiGR->timeline, SIGNAL(QTableWidget::itemClicked(QTableWidgetItem*)),this,SLOT(showEventText(QTableWidgetItem*)));
         connect(networkManager, SIGNAL(loadNumProcessorsFinishedOut()), this, SLOT(loadNumProcessorsFinished()));
         networkManager->loadNumProcessors(filename);
-        info->threads.clear();
-        for(int i=0;i<info->numProcessors;i++){
-                 info->threads.push_back(0);
-        }
+
         tableManager = new TableManager(uiGR->timeline);
         connect(uiGR->timeline, SIGNAL(cellClicked(int, int)), this, SLOT(showEventText(int, int)));
 
@@ -149,6 +150,7 @@ void MainWindow::on_detailButton_clicked()
     for (int i = 0; i < info->numProcessors + 1; i++)
         info->threads[i] = 0;
     networkManager->detailData(uiGR->progressBar);
+    tableManager->analyzeEvents(info);
 
 
 }
