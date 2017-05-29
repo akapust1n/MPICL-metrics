@@ -6,10 +6,9 @@
 *.log
 
 *.inc
-*.bst
 *.module
 *.gz
-*.cls
+
 
 build*
 *.o
