@@ -38,8 +38,9 @@ QStringList RequestManager::getFileList(QByteArray array)
     QJsonObject itemObject = document.object();
     QJsonArray fileArray = itemObject["message"].toArray();
     for (auto temp : fileArray) {
-      //  std::cout << temp.toString().toStdString() << std::endl;
-        result.append(temp.toString());
+      std::cout << temp.toString().toStdString() << std::endl;
+      auto tt = temp.toString();
+        result.append(temp.toObject()["filename"].toString());
     }
     return result;
 }

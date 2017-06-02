@@ -30,7 +30,7 @@ private slots:
     void loadNumProcessorsFinished();
     void loadTimeBordersFinished();
     void loginFinished();
-    
+
     void on_loadFileListButton_clicked();
 
     void on_chooseFileButton_clicked();

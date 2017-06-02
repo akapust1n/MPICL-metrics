@@ -155,17 +155,14 @@ apiRoutes.get("/getTimeBorders", function (req, res) {
 
 
 apiRoutes.get("/getFileList", function (req, res) {
-    User.findOne({
-        name: req.query.name
-    }, function (err, user) {
+       let filename=  req.query.name;
+        let query = connection.query('SELECT distinct filename from FilesUsers  WHERE user=? ', [filename], function (err, files, fields) {
 
-        if (err) throw err;
-
-        if (!user) {
+            if (!res) {
             console.log(req.query.name);
             res.json({success: false, message: 'User not found.'});
-        } else if (user) {
-            res.json({success: true, message: user.files});
+        } else  {
+            res.json({success: true, message: files});
 
 
         }
