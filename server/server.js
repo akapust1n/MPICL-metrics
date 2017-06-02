@@ -5,11 +5,9 @@ var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
 var morgan = require('morgan');
-var mongoose = require('mongoose');
 
 var jwt = require('jsonwebtoken'); // used to create, sign, and verify tokens
 var config = require('./config'); // get our config file
-var User = require('./app/models/user'); // get our mongoose model
 var mysql = require('mysql');
 
 var connection = mysql.createConnection({
@@ -30,7 +28,6 @@ connection.connect(function (err) {
 });
 
 var port = process.env.PORT || 8080; // used to create, sign, and verify tokens
-mongoose.connect(config.database); // connect to database
 app.set('superSecret', config.secret); // secret variable
 
 // use body parser so we can get info from POST and/or URL parameters
@@ -49,34 +46,34 @@ var apiRoutes = express.Router();
 app.listen(port);
 console.log('Magic happens at http://localhost:' + port);
 
-app.get('/setup', function (req, res) {
-
-    // create a sample user
-    let nick = new User({
-        name: 'Nick Cerminara',
-        password: 'password',
-        files: []
-    });
-    nick.files.push("trace1");
-    nick.files.push("trace2");
-    nick.files.push("trace3");
-    // save the sample user
-    nick.save(function (err) {
-        if (err) throw err;
-
-        console.log('User saved successfully');
-        res.json({success: true});
-    });
-    let myUser = new User({
-        name: 'User',
-        password: 'password',
-        files: []
-    });
-
-    myUser.files.push("trace2");
-    myUser.files.push("trace3");
-    // save the sample user
-});
+// app.get('/setup', function (req, res) {
+//
+//     // create a sample user
+//     let nick = new User({
+//         name: 'Nick Cerminara',
+//         password: 'password',
+//         files: []
+//     });
+//     nick.files.push("trace1");
+//     nick.files.push("trace2");
+//     nick.files.push("trace3");
+//     // save the sample user
+//     nick.save(function (err) {
+//         if (err) throw err;
+//
+//         console.log('User saved successfully');
+//         res.json({success: true});
+//     });
+//     let myUser = new User({
+//         name: 'User',
+//         password: 'password',
+//         files: []
+//     });
+//
+//     myUser.files.push("trace2");
+//     myUser.files.push("trace3");
+//     // save the sample user
+// });
 
 apiRoutes.get('/', function (req, res) {
 
@@ -85,27 +82,23 @@ apiRoutes.get('/', function (req, res) {
 
 
 apiRoutes.get('/authenticate', function (req, res) {
-    console.log("gg");
-    // find the user
-    User.findOne({
-        name: req.query.name
-    }, function (err, user) {
+    let username = req.query.name;
+    let password = req.query.password;    // find the user
+    let query = connection.query('SELECT user,password from Users WHERE user = ? and password = ?', [username, password], function (err, result, fields) {
+            console.log("LOGIN" + result[0].user + result[0].password);
 
-        if (err) throw err;
-
-        if (!user) {
-            console.log(req.query.name);
-            res.json({success: false, message: 'Authentication failed. User not found.'});
-        } else if (user) {
-
-            // check if password matches
-            if (user.password != req.query.password) {
-                res.json({success: false, message: 'Authentication failed. Wrong password.'});
-            } else {
-
+            if (!result) {
+                console.log(req.query.name);
+                res.json({success: false, message: 'Authentication failed. User not found.'});
+            }
+            else {
                 // if user is found and password is right
                 // create a token
-                var token = jwt.sign(user, app.get('superSecret'), {
+                let user = {
+                    user: result[0].user,
+                    password: result[0].password
+                };
+                let token = jwt.sign(user, app.get('superSecret'), {
                     expiresIn: 60 * 60 * 24 // expires in 24 hours
                 });
 
@@ -116,10 +109,8 @@ apiRoutes.get('/authenticate', function (req, res) {
                     token: token
                 });
             }
-
-        }
-
-    });
+        })
+    ;
 });
 
 
@@ -128,11 +119,11 @@ apiRoutes.get("/getFile", function (req, res) {
     let offset = parseInt(req.query.offset);
     let limit = parseInt(req.query.limit);
     let timeMin = parseFloat(req.query.timeMin);
-    let timeMax= parseFloat(req.query.timeMax);
+    let timeMax = parseFloat(req.query.timeMax);
 
     console.log("OFFSET");
     console.log(filename, offset);
-    let query = connection.query('SELECT * from Tracks  WHERE filename=? AND time>=? AND time<=?  ORDER BY time asc LIMIT ? OFFSET ?', [filename,timeMin, timeMax, limit, offset], function (err, rows, fields) {
+    let query = connection.query('SELECT * from Tracks  WHERE filename=? AND time>=? AND time<=?  ORDER BY time asc LIMIT ? OFFSET ?', [filename, timeMin, timeMax, limit, offset], function (err, rows, fields) {
 
         if (!err)
             console.log('The solution is: ', rows);
@@ -185,9 +176,9 @@ apiRoutes.get("/getNumRecords", function (req, res) {
     let filename = req.query.filename;
 
     let timeMin = parseFloat(req.query.timeMin);
-    let timeMax= parseFloat(req.query.timeMax);
+    let timeMax = parseFloat(req.query.timeMax);
 
-    let query = connection.query('SELECT COUNT(*) from Tracks  WHERE filename=? AND time>=? AND time<=? ', [filename,timeMin, timeMax], function (err, rows, fields) {
+    let query = connection.query('SELECT COUNT(*) from Tracks  WHERE filename=? AND time>=? AND time<=? ', [filename, timeMin, timeMax], function (err, rows, fields) {
 
         if (!err)
             console.log('The solution is: ', rows);

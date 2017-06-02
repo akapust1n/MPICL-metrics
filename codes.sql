@@ -132,9 +132,9 @@ INSERT INTO Codes(code, name, description, category) VALUES(-62,"RECVCANCELKEY "
 
 
 
-INSERT INTO Codes(code, name, description, category) VALUES(-201,"FILEOPENKEY","key of a \"channel or file open\" event ","disk i//o events");
+/*INSERT INTO Codes(code, name, description, category) VALUES(-201,"FILEOPENKEY","key of a \"channel or file open\" event ","disk i//o events");*/
 
-INSERT INTO Codes(code, name, description, category) VALUES(-202,"FILECLOSEKEY  ","key of a \"channel or file close\" event ","disk i//o events");
+/*INSERT INTO Codes(code, name, description, category) VALUES(-202,"FILECLOSEKEY  ","key of a \"channel or file close\" event ","disk i//o events");*/
 
 INSERT INTO Codes(code, name, description, category) VALUES(-221,"WRITEKEY","key of a \"channel or file write\" event","disk i//o events");
 
