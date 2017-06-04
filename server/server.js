@@ -85,9 +85,9 @@ apiRoutes.get('/authenticate', function (req, res) {
     let username = req.query.name;
     let password = req.query.password;    // find the user
     let query = connection.query('SELECT user,password from Users WHERE user = ? and password = ?', [username, password], function (err, result, fields) {
-            console.log("LOGIN" + result[0].user + result[0].password);
-
-            if (!result) {
+            //console.log("LOGIN" + result[0].user + result[0].password);
+            console.log(result);
+            if (result.length===0) {
                 console.log(req.query.name);
                 res.json({success: false, message: 'Authentication failed. User not found.'});
             }
@@ -249,36 +249,36 @@ apiRoutes.post("/stats")
 //AUTH
 //-----------------------------
 
-// apiRoutes.use(function (req, res, next) {
-//
-//     // check header or url parameters or post parameters for token
-//     var token = req.body.token || req.query.token || req.headers['x-access-token'];
-//
-//     // decode token
-//     if (token) {
-//
-//         // verifies secret and checks exp
-//         jwt.verify(token, app.get('superSecret'), function (err, decoded) {
-//             if (err) {
-//                 return res.json({success: false, message: 'Failed to authenticate token.'});
-//             } else {
-//                 // if everything is good, save to request for use in other routes
-//                 req.decoded = decoded;
-//                 next();
-//             }
-//         });
-//
-//     } else {
-//
-//         // if there is no token
-//         // return an error
-//         return res.status(403).send({
-//             success: false,
-//             message: 'No token provided.'
-//         });
-//
-//     }
-// });
+apiRoutes.use(function (req, res, next) {
+
+    // check header or url parameters or post parameters for token
+    let token = req.body.token || req.query.token || req.headers['x-access-token'];
+
+    // decode token
+    if (token) {
+
+        // verifies secret and checks exp
+        jwt.verify(token, app.get('superSecret'), function (err, decoded) {
+            if (err) {
+                return res.json({success: false, message: 'Failed to authenticate token.'});
+            } else {
+                // if everything is good, save to request for use in other routes
+                req.decoded = decoded;
+                next();
+            }
+        });
+
+    } else {
+
+        // if there is no token
+        // return an error
+        return res.status(403).send({
+            success: false,
+            message: 'No token provided.'
+        });
+
+    }
+});
 
 apiRoutes.get('/users', function (req, res) {
     User.find({}, function (err, users) {

@@ -44,6 +44,7 @@ void MainWindow::on_pushButton_clicked()
 {
     QString username = ui->loginForm->text();
     QString password = ui->passwordForm->text();
+    info->name = username;
     connect(networkManager, SIGNAL(loginFinishedOut()), this, SLOT(loginFinished()));
     networkManager->login(username, password);
 
@@ -79,7 +80,7 @@ void MainWindow::loadNumProcessorsFinished()
 
 void MainWindow::loadTimeBordersFinished()
 {
-    uiGR->minTimeValue->setText(QString::number(info->minMax.first));
+    uiGR->minTimeValue->setText(QString::number(info->minMax.first<0?0:info->minMax.first));
     uiGR->maxTimeValue->setText(QString::number(info->minMax.second));
 
     QDoubleValidator* validator = new QDoubleValidator(0, info->minMax.second, 10, this);

@@ -9,6 +9,7 @@ class Info
 {
 public:
     Info();
+    QString name;
     QString token;
     int numProcessors;
     QString filename;

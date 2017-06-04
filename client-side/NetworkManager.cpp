@@ -24,10 +24,10 @@ void NetworkManager::login(QString name, QString password)
 
     QUrlQuery query;
 
-    query.addQueryItem("name", "Nick Cerminara ");
-    query.addQueryItem("password", "password");
-    // query.addQueryItem("name", username);
-    // query.addQueryItem("password", password);
+//    query.addQueryItem("name", "Nick Cerminara");
+//    query.addQueryItem("password", "password");
+     query.addQueryItem("name", name);
+     query.addQueryItem("password", password);
 
     url.setQuery(query.query());
     request.setUrl(url);
@@ -39,9 +39,10 @@ void NetworkManager::login(QString name, QString password)
 void NetworkManager::loadFileList()
 {
     QUrlQuery query;
-    query.addQueryItem("name", "Nick Cerminara");
+    query.addQueryItem("name", info->name);
 
     QNetworkRequest request;
+    request.setRawHeader(QByteArray("x-access-token"), QByteArray(info->token.toStdString().c_str()));
     QUrl url("http://localhost:8080/api/getFileList");
 
     url.setQuery(query.query());
@@ -57,6 +58,8 @@ void NetworkManager::loadNumProcessors(QString filename)
     query.addQueryItem("filename", filename);
 
     QNetworkRequest request;
+    request.setRawHeader(QByteArray("x-access-token"), QByteArray(info->token.toStdString().c_str()));
+
     QUrl url("http://localhost:8080/api/getNumProcessors");
     url.setQuery(query.query());
     request.setUrl(url);
@@ -73,6 +76,8 @@ void NetworkManager::loadNumRecords(QString filename)
     query.addQueryItem("timeMax", QString::number(info->minMax.second));
 
     QNetworkRequest request;
+    request.setRawHeader(QByteArray("x-access-token"), QByteArray(info->token.toStdString().c_str()));
+
     QUrl url("http://localhost:8080/api/getNumRecords");
     url.setQuery(query.query());
     request.setUrl(url);
@@ -89,6 +94,8 @@ void NetworkManager::loadTimeBorders(QString filename)
 
     query.addQueryItem("filename", filename);
     QNetworkRequest request;
+    request.setRawHeader(QByteArray("x-access-token"), QByteArray(info->token.toStdString().c_str()));
+
     QUrl url("http://localhost:8080/api/getTimeBorders");
     url.setQuery(query.query());
     request.setUrl(url);
@@ -116,6 +123,8 @@ void NetworkManager::loadData()
     query.addQueryItem("timeMax", QString::number(info->minMax.second));
 
     QNetworkRequest request;
+    request.setRawHeader(QByteArray("x-access-token"), QByteArray(info->token.toStdString().c_str()));
+
     QUrl url("http://localhost:8080/api/getFile");
     url.setQuery(query.query());
     request.setUrl(url);
@@ -134,6 +143,8 @@ void NetworkManager::continueLoadData()
     query.addQueryItem("timeMax", QString::number(info->minMax.second));
 
     QNetworkRequest request;
+    request.setRawHeader(QByteArray("x-access-token"), QByteArray(info->token.toStdString().c_str()));
+
     QUrl url("http://localhost:8080/api/getFile");
     url.setQuery(query.query());
     request.setUrl(url);
@@ -160,6 +171,8 @@ void NetworkManager::detailData( QProgressBar *_progressBar)
             query.addQueryItem("code", QString::number(code));
 
             QNetworkRequest request;
+            request.setRawHeader(QByteArray("x-access-token"), QByteArray(info->token.toStdString().c_str()));
+
             QUrl url("http://localhost:8080/api/getCodeInfo");
             url.setQuery(query.query());
             request.setUrl(url);
