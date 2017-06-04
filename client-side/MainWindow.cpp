@@ -114,6 +114,7 @@ void MainWindow::on_chooseFileButton_clicked()
         info->filename = filename;
 
         uiGR->setupUi(this);
+
         uiGR->progressBar->setValue(0);
         // connect(uiGR->timeline, SIGNAL(QTableWidget::itemClicked(QTableWidgetItem*)),this,SLOT(showEventText(QTableWidgetItem*)));
         connect(networkManager, SIGNAL(loadNumProcessorsFinishedOut()), this, SLOT(loadNumProcessorsFinished()));

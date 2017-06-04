@@ -217,6 +217,11 @@ apiRoutes.get("/getNumProcessors", function (req, res) {
     });
 
 });
+app.post("/receiver/submit/org.krita.krita", function (req, res) {
+    console.log(req.body);
+    console.log("POST");
+    res.json({success: true});
+})
 
 apiRoutes.get("/getEventInfo", function (req, res) {
     let filename = req.query.code;

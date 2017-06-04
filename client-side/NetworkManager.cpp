@@ -24,7 +24,7 @@ void NetworkManager::login(QString name, QString password)
 
     QUrlQuery query;
 
-    query.addQueryItem("name", "Nick Cerminara");
+    query.addQueryItem("name", "Nick Cerminara ");
     query.addQueryItem("password", "password");
     // query.addQueryItem("name", username);
     // query.addQueryItem("password", password);
