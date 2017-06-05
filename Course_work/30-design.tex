@@ -190,7 +190,14 @@ FOREIGN KEY (filename) REFERENCES Files(filename)
 ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE = INNODB DEFAULT CHARSET=utf8;
 \end{lstlisting}
-Так же были спроектирована вспомогательные базы данных для хранения информации о событиях MPI, файлах, пользователях.
+Так же были спроектированы вспомогательные базы данных для хранения информации о событиях MPI, файлах, пользователях.
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.8\textwidth]{img/img7.png}
+	\caption{Диаграмма классов серверного приложения}
+	\label{fig:spire12}
+\end{figure}
+
 \begin{lstlisting}[language=SQL]
 CREATE TABLE Users(
 user  VARCHAR(50) NOT NULL  PRIMARY KEY,
